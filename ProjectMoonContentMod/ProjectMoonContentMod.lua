@@ -66,6 +66,11 @@ function PMCMOD.karma()
     return (G.GAME and G.GAME.pmcmod_karma) or 0
 end
 
+-- What Sora reads: the City's favour net of its consequences. Negative when Karma outweighs Grace.
+function PMCMOD.sora_grace()
+    return PMCMOD.grace() - PMCMOD.karma()
+end
+
 function PMCMOD.voice_of_the_city_in_play()
     local jokers = (G.jokers and G.jokers.cards) or {}
     for i = 1, #jokers do

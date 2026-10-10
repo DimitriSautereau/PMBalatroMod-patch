@@ -29,7 +29,7 @@ SMODS.Joker {
 
 
         return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, card.ability.extra.soraDeathCounter,
-            PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.chargeStacks } }
+            PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.chargeStacks, PMCMOD.sora_grace() } }
 	end,
 	calculate = function(self, card, context)
 
@@ -133,15 +133,16 @@ SMODS.Joker {
 			end
 
 			local ex = card.ability.extra
-			local grace = PMCMOD.grace()
 			local ret = {}
 
 			if ex.locked then
-				-- second form: Grace improves every channel, on top of what she absorbed
-				ret.chips = ex.chips * multiplier * (1 + 1.5 * grace)
-				ret.mult = ex.mult + 5 * grace
-				local xm = ex.mult + 0.5 * grace
-				if xm > 0 then ret.xmult = ex.xmult * xm end
+				-- second form: the net Grace (Grace less Karma, which can go negative) is added to
+				-- each channel on top of what she absorbed
+				local sg = PMCMOD.sora_grace()
+				ret.chips = ex.chips * multiplier + 25 * sg
+				ret.mult = ex.mult + 5 * sg
+				local xm = ex.xmult + 0.5 * sg
+				if xm > 0 then ret.xmult = xm end
 			else
 				ret.chips = ex.chips * multiplier
 				if ex.mult > 0 then ret.mult = ex.mult end

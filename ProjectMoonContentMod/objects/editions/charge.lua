@@ -8,7 +8,7 @@ SMODS.Edition {
     shader = 'pmcmod_charge',
     config = {},
     in_shop = true,
-    weight = 3,
+    weight = 17,
     extra_cost = 5,
     sound = { sound = "negative", per = 1.5, vol = 0.4 },
     loc_vars = function(self, info_queue, card)

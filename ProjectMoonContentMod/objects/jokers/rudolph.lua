@@ -23,6 +23,10 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 	
 	end,
+	-- Only offered while a Keypage holding Charge is on the team.
+	in_pool = function(self, args)
+		return PMCMOD.has_charge_keypage()
+	end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_RCorp'), HEX('2e2b2b'), HEX('c4560c'), 1.2 )
  	end,

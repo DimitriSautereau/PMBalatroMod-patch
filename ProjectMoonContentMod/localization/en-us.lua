@@ -391,15 +391,15 @@ return {
             j_pmcmod_maxim = {
                 name = 'Maxim',
                 text = {
-                    {"Gain {C:blue}#3#{} Charge every time",
-                    "a Face Card scores, up to {C:blue}#4#{} Charge",},
-                    {"If Charge is >= 90, gain {C:gold}$#2#{} at",
-                    "the end of the Scene"},
-                    {"If a Number card is played, consume",
-                    "Charge equivalent to the card's rank",
-                    "to retrigger it once",
-                    "{C:inactive}Currently {C:blue}#1#{} Charges"}
-
+                    {"Every scored {C:attention}Face Card{} adds {C:blue}#1# Charge{}",
+                    "to the shared Charge pool"},
+                    {"Every scored {C:attention}Number Card{} spends {C:blue}#2# Charge{}",
+                    "to trigger twice"},
+                    {"Gives {C:chips}+#3# Chips{} for every {C:gold}$1{} you have",
+                    "{C:inactive}(Currently {C:chips}+#4#{C:inactive} Chips)"},
+                    {"At the end of the Scene, gain {C:gold}$1{} for every",
+                    "{C:blue}#5# Charge{} in the pool",
+                    "{C:inactive}(Currently {C:gold}$#6#{C:inactive})"},
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Maxim Keypage{}',

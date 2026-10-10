@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'maxim',
 	name = "Maxim",
 	pronouns = "he_him",
-	config = { extra = { chargeCount = 0, dollars = 10, repetitions = 1, charge_mod = 5, maxCharge = 100 } },
+	config = { extra = { chargeGain = 5, chargeCost = 1, chipsPerDollar = 2, dollarsPerCharge = 10, repetitions = 1 } },
 	unlocked = false,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -11,43 +11,51 @@ SMODS.Joker {
 	cost = 6,
 	atlas = 'ModdedProjectMoonTrue',
 	pos = { x = 7, y = 14 },
-	attributes = {'economy', 'retrigger'},
+	attributes = {'economy', 'retrigger', 'charge'},
 	pools =
 	{
         ["RCorp"] = true,
  	},
 	loc_vars = function (self, info_queue, card)
-    	return {vars = { card.ability.extra.chargeCount, card.ability.extra.dollars, card.ability.extra.charge_mod, card.ability.extra.maxCharge }}
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_pmcmod_charge
+		return {vars = {
+			card.ability.extra.chargeGain,
+			card.ability.extra.chargeCost,
+			card.ability.extra.chipsPerDollar,
+			card.ability.extra.chipsPerDollar * (G.GAME.dollars or 0),
+			card.ability.extra.dollarsPerCharge,
+			math.floor(PMCMOD.get_charge() / card.ability.extra.dollarsPerCharge),
+		}}
 	end,
 	calculate = function(self, card, context)
 
-        if context.individual and context.cardarea == G.play and not context.blueprint then
-
+		-- A scored Face card feeds the shared Charge pool.
+		if context.individual and context.cardarea == G.play and not context.blueprint then
 			if context.other_card:is_face() then
-				card.ability.extra.chargeCount = card.ability.extra.chargeCount + 5
-
-				if card.ability.extra.chargeCount >= 100 then
-					card.ability.extra.chargeCount = 100
-				end
-
+				PMCMOD.add_charge(card.ability.extra.chargeGain)
 			end
-        end
+		end
 
+		-- A scored number card spends Charge from the pool to trigger again.
 		if context.repetition and context.cardarea == G.play and not context.blueprint then
-			if card.ability.extra.chargeCount >= (context.other_card.base.nominal * 2) and not context.other_card:is_face() then
-					card.ability.extra.chargeCount = card.ability.extra.chargeCount - (context.other_card.base.nominal * 2)
-					return {
-						repetitions = card.ability.extra.repetitions
-					}
+			if not context.other_card:is_face() and PMCMOD.get_charge() >= card.ability.extra.chargeCost then
+				PMCMOD.add_charge(-card.ability.extra.chargeCost)
+				return {
+					repetitions = card.ability.extra.repetitions
+				}
 			end
+		end
+
+		-- Chips per dollar held.
+		if context.joker_main then
+			return {
+				chips = card.ability.extra.chipsPerDollar * (G.GAME.dollars or 0)
+			}
 		end
 	end,
 	calc_dollar_bonus = function(self, card)
-        return card.ability.extra.chargeCount >= 90 and card.ability.extra.dollars
-    end,
-	-- Only offered while a Keypage holding Charge is on the team.
-	in_pool = function(self, args)
-		return PMCMOD.has_charge_keypage()
+		local due = math.floor(PMCMOD.get_charge() / card.ability.extra.dollarsPerCharge)
+		if due >= 1 then return due end
 	end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_RCorp'), HEX('2e2b2b'), HEX('c4560c'), 1.2 )

@@ -42,6 +42,34 @@ function PMCMOD.has_charge_keypage()
     return false
 end
 
+-- Rudolph's four effects are all "while Rudolph is on the team", so they need to be visible to
+-- events that happen outside his own calculate: other cards triggering, and anything being sold.
+function PMCMOD.rudolph_in_play()
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    for i = 1, #jokers do
+        local c = jokers[i]
+        if c.config and c.config.center and c.config.center.key == 'j_pmcmod_rudolph' then
+            return true
+        end
+    end
+    return false
+end
+
+-- Selling anything (Keypage or consumable) feeds the Charge pool with its sell value.
+function PMCMOD.install_sell_reporter()
+    if PMCMOD._sell_reporter or not (G and G.FUNCS and G.FUNCS.sell_card) then return end
+    local original = G.FUNCS.sell_card
+    PMCMOD._sell_reporter = original
+    G.FUNCS.sell_card = function(e)
+        local sold = e and e.config and e.config.ref_table
+        local value = (sold and sold.sell_cost) or 0
+        original(e)
+        if value > 0 and PMCMOD.rudolph_in_play() then
+            PMCMOD.add_charge(value)
+        end
+    end
+end
+
 -- Shop weight helper for get_weight(). A rarity draws its members in proportion to their
 -- weight (10 by default), so a multiple makes a joker more likely to be offered. Every joker
 -- starts at x1 - equal with its rarity peers - and only rises when its condition is met.
@@ -155,6 +183,13 @@ function PMCMOD.install_trigger_reporter()
 
     function Card:calculate_joker(context)
         local ret = original(self, context)
+        -- Rudolph: a Keypage holding Charge gains $1 of sell value every time it triggers.
+        if ret and self.ability and self.ability.set == 'Joker' and not self.debuff
+            and self.edition and self.edition.key == 'e_pmcmod_charge'
+            and context and not context.blueprint and PMCMOD.rudolph_in_play() then
+            self.ability.extra_value = (self.ability.extra_value or 0) + 1
+            self:set_cost()
+        end
         if ret and self.ability and self.ability.set == 'Joker' and not self.debuff
             and context and not context.pmcmod_trigger and not context.blueprint
             and SMODS.can_context_post_trigger(context) and PMCMOD.sinclair_in_play() then
@@ -168,6 +203,7 @@ function PMCMOD.install_trigger_reporter()
     end
 end
 PMCMOD.install_trigger_reporter()
+PMCMOD.install_sell_reporter()
 
 SMODS.current_mod.optional_features = function()
     return {

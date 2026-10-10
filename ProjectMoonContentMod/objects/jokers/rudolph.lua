@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'rudolph',
 	name = "Rudolph",
 	pronouns = "he_him",
-	config = { extra = {  } },
+	config = { extra = { repetitions = 1 } },
 	unlocked = false,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -21,11 +21,32 @@ SMODS.Joker {
     	return {vars = {  }}
 	end,
 	calculate = function(self, card, context)
-	
-	end,
-	-- Only offered while a Keypage holding Charge is on the team.
-	in_pool = function(self, args)
-		return PMCMOD.has_charge_keypage()
+
+		-- A scored card holding Charge triggers once more.
+		if context.repetition and context.cardarea == G.play and not context.blueprint then
+			local scored = context.other_card
+			if scored and scored.edition and scored.edition.key == 'e_pmcmod_charge' then
+				return {
+					repetitions = card.ability.extra.repetitions
+				}
+			end
+		end
+
+		-- Mult equal to the sell value of every other Keypage on the team.
+		if context.joker_main then
+			local total = 0
+			for i = 1, #G.jokers.cards do
+				local other = G.jokers.cards[i]
+				if other ~= card then
+					total = total + (other.sell_cost or 0)
+				end
+			end
+			if total > 0 then
+				return {
+					mult = total
+				}
+			end
+		end
 	end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_RCorp'), HEX('2e2b2b'), HEX('c4560c'), 1.2 )

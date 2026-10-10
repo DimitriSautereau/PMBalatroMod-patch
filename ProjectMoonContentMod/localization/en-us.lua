@@ -409,8 +409,14 @@ return {
             j_pmcmod_rudolph = {
                 name = 'Rudolph',
                 text = {
-                    "{C:dark_edition}Charge{} cards now",
-                    "gain {C:attention}double charges{} per trigger",
+                    {"{C:dark_edition}Charge{} cards trigger",
+                    "once more"},
+                    {"A Keypage holding {C:dark_edition}Charge{} gains",
+                    "{C:gold}$1{} of sell value every time it triggers"},
+                    {"Gains {C:mult}Mult{} equal to the total",
+                    "sell value of your other Keypages"},
+                    {"Selling anything adds its sell value",
+                    "to the {C:blue}Charge pool{}"},
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Rudolph Keypage{}',

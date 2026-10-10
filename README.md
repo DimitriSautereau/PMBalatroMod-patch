@@ -45,4 +45,6 @@ Other fixes
 - Maxim reworked onto the shared Charge pool: scored Face cards add 5 Charge, scored number cards spend 1 Charge to trigger twice, +2 Chips per dollar held, and $1 per 10 Charge at the end of the Scene.
 - Rudolph reworked (his calculate was empty, so he did nothing): Charge cards trigger once more, a Charge Keypage gains $1 sell value each time it triggers, he gains Mult equal to the other Keypages' total sell value, and selling anything feeds its sell value into the Charge pool.
 - Nikolai: R Corp Keypages give x1.5 Mult each while he is held (compounding - three is x3.375), on top of his catalogue Mult.
+- Prescripts reworked: an Index Keypage on the team (aspects excluded) issues one whenever none is active, each lasts 3 Scenes, and resolving grants Grace of the City (fulfilled) or Karmic Consequence (failed) - two run-wide counters - while the old $15 / wipe-money swing moved to Voice of the City, which now only pays it out while it is held.
+- Garnet left the Index pool (it keeps Thumb, Middle, Ring, Pinky and Bloodfiends), Grace of the City now scales the shop weight of the Index Keypages (x2 each, capped x8), and Nikolai no longer catalogues aspects.
 

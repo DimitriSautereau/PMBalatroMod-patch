@@ -14,7 +14,6 @@ SMODS.Joker {
 	attributes = {'random', 'copying'},
 	pools = {
 		["Thumb"] = true,
-		["Index"] = true,
 		["Middle"] = true,
 		["Ring"] = true,
 		["Pinky"] = true,

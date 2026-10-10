@@ -45,6 +45,10 @@ SMODS.Joker {
 		end
 		
 	end,
+	-- Grace of the City makes Index Keypages more likely (x2 each, capped by PMCMOD.bonus_weight).
+	get_weight = function(self, weight)
+		return PMCMOD.index_weight(weight)
+	end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_index'), HEX('e0e0e0'), HEX('59a5e3'), 1.2 )
  	end,

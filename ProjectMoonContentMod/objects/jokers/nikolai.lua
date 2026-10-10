@@ -37,7 +37,9 @@ SMODS.Joker {
 	end,
 	calculate = function(self, card, context)
 		
-        if context.buying_card and context.card.ability.set == "Joker" and not context.blueprint then
+        -- aspects are not Keypages of the Index - they do not count towards the catalogue
+        if context.buying_card and context.card.ability.set == "Joker" and not context.blueprint
+            and not PMCMOD.is_aspect(context.card.config.center.key) then
 
             local cardAlreadySaved = false
 

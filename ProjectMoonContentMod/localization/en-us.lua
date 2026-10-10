@@ -1980,8 +1980,9 @@ return {
             j_pmcmod_rien = {
                 name = 'Rien',
                 text = {
-                    {"While an {C:attention}Index{} Keypage is on the team, a {C:blue}Prescript{} is",
-                    "issued whenever none is active, and each lasts {C:attention}3 Scenes{}"},
+                    {"At the start of a Scene, if an {C:attention}Index{} Keypage is on the",
+                    "team and no {C:blue}Prescript{} is out, one is issued. A Prescript is",
+                    "destroyed when fulfilled, or after {C:attention}3 Scenes{}"},
                     {"Gain {C:mult}#3#{} Mult for every {C:blue}Prescript{} fullfilled.",
                     "Destroy itself if the {C:blue}Prescript fails"},
                     {"{C:attention}Bonus effect: {}If Sora is present and to the right, gains double",
@@ -2585,9 +2586,10 @@ return {
             j_pmcmod_voiceOfTheCity = {
                 name = 'Voice of the City',
                 text = {
-                    {"While an {C:attention}Index{} Keypage is on the team, a",
-                    "{C:blue}Prescript{} is issued whenever none is active,",
-                    "and each one lasts {C:attention}#3# Scenes{}"},
+                    {"At the start of a Scene, if an {C:attention}Index{} Keypage is",
+                    "on the team and no {C:blue}Prescript{} is out, one is issued"},
+                    {"A Prescript is destroyed as soon as it is",
+                    "fulfilled, or at the end of its {C:attention}#3#rd Scene{}"},
                     {"When one resolves, while this Voice is held:",
                     "{C:gold}$15{} if it was fulfilled, otherwise all",
                     "your money"},

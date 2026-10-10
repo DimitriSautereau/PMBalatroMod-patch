@@ -51,8 +51,7 @@ SMODS.Joker {
 
 			-- the driver draws from a shared list, so match the key itself
 			do
-				if type(context.card.config.center.key) == 'string'
-					and context.card.config.center.key:sub(1, 18) == 'j_pmcmod_prescript' then
+				if PMCMOD.is_prescript_key(context.card.config.center.key) then
 					--print("prescript destroyed")
 					if context.card.prescriptFullfilled then
 						--print("prescript fullfilled")

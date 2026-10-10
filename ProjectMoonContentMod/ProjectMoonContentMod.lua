@@ -102,11 +102,48 @@ function PMCMOD.prescript_in_play()
     return false
 end
 
+function PMCMOD.is_prescript_key(key)
+    return type(key) == 'string' and key:sub(1, 18) == 'j_pmcmod_prescript'
+end
+
 -- Scenes survived. Prescripts call this from their end_of_round branch and resolve when it is true.
+-- Tripping it marks the card resolved so the immediate path below cannot pay out a second time.
 function PMCMOD.prescript_expired(card)
     if not (card and card.ability and card.ability.extra) then return false end
+    if card.ability.extra.prescriptResolved then return false end
     card.ability.extra.scenesAlive = (card.ability.extra.scenesAlive or 0) + 1
-    return card.ability.extra.scenesAlive >= PMCMOD.PRESCRIPT_SCENES
+    if card.ability.extra.scenesAlive >= PMCMOD.PRESCRIPT_SCENES then
+        card.ability.extra.prescriptResolved = true
+        return true
+    end
+    return false
+end
+
+-- The moment a prescript's outcome is known - fulfilled, or blown - it is destroyed. The other exit
+-- is the end of its third Scene, which the page's own end_of_round branch handles.
+function PMCMOD.resolve_prescript(card)
+    if not (card and card.ability and card.ability.extra) then return end
+    local ex = card.ability.extra
+    if ex.prescriptResolved then return end
+    ex.prescriptResolved = true
+
+    local fulfilled = ex.prescriptFullfilled == true and ex.prescriptFailed ~= true
+    card.prescriptFullfilled = fulfilled          -- Rien reads this as the page is destroyed
+
+    local n = tostring(card.config.center.key):match('prescript(%d+)')
+    if n and G.GAME.pool_flags then G.GAME.pool_flags['prescript' .. n .. 'Extinct'] = true end
+
+    if fulfilled then PMCMOD.grant_grace() else PMCMOD.grant_karma() end
+
+    if not card.getting_sliced then
+        card.getting_sliced = true
+        local target = card
+        G.E_MANAGER:add_event(Event({func = function()
+            play_sound('tarot1', 0.9, 0.9)
+            target:juice_up(0.8, 0.8)
+            target:start_dissolve({G.C.RED}, nil, 1.6)
+        return true end }))
+    end
 end
 
 function PMCMOD.grant_grace()
@@ -127,14 +164,14 @@ function PMCMOD.index_weight(weight)
     return PMCMOD.bonus_weight(weight, PMCMOD.grace())
 end
 
--- Spawns the next prescript while an Index member is on the team and none is out. Driven from the
--- Card:calculate_joker wrapper on ending_shop, once per shop.
+-- Spawns the next prescript at the start of a Scene while an Index member is on the team and none
+-- is out. Driven from the Card:calculate_joker wrapper on setting_blind, once per Scene.
 function PMCMOD.prescript_driver()
     if not (G.GAME and G.jokers) then return end
     local rr = G.GAME.round_resets or {}
-    local shopKey = (rr.ante or 0) * 100 + (G.GAME.round or 0)
-    if G.GAME.pmcmod_prescript_shopKey == shopKey then return end
-    G.GAME.pmcmod_prescript_shopKey = shopKey
+    local sceneKey = (rr.ante or 0) * 10000 + (G.GAME.round or 0)
+    if G.GAME.pmcmod_prescript_sceneKey == sceneKey then return end
+    G.GAME.pmcmod_prescript_sceneKey = sceneKey
 
     if not PMCMOD.index_member_in_play() then return end
     if PMCMOD.prescript_in_play() then return end
@@ -299,8 +336,15 @@ function PMCMOD.install_trigger_reporter()
         local ret = original(self, context)
         -- the prescript cycle is driven here: this wrapper is the only place that sees
         -- ending_shop without needing a specific Keypage on the team
-        if context and context.ending_shop then
+        if context and context.setting_blind then
             PMCMOD.prescript_driver()
+        end
+        -- a prescript whose outcome is already known is destroyed right away
+        if context and not context.blueprint and self.ability and self.ability.set == 'Joker'
+            and self.config and self.config.center and PMCMOD.is_prescript_key(self.config.center.key)
+            and self.ability.extra and not self.ability.extra.prescriptResolved
+            and (self.ability.extra.prescriptFullfilled == true or self.ability.extra.prescriptFailed == true) then
+            PMCMOD.resolve_prescript(self)
         end
         -- Rudolph: a Keypage holding Charge gains $1 of sell value every time it triggers.
         if ret and self.ability and self.ability.set == 'Joker' and not self.debuff

@@ -47,4 +47,5 @@ Other fixes
 - Nikolai: R Corp Keypages give x1.5 Mult each while he is held (compounding - three is x3.375), on top of his catalogue Mult.
 - Prescripts reworked: an Index Keypage on the team (aspects excluded) issues one whenever none is active, each lasts 3 Scenes, and resolving grants Grace of the City (fulfilled) or Karmic Consequence (failed) - two run-wide counters - while the old $15 / wipe-money swing moved to Voice of the City, which now only pays it out while it is held.
 - Garnet left the Index pool (it keeps Thumb, Middle, Ring, Pinky and Bloodfiends), Grace of the City now scales the shop weight of the Index Keypages (x2 each, capped x8), and Nikolai no longer catalogues aspects.
+- Follow-up: the prescript cycle fires at the start of a Scene (any Index Keypage, not just Rien and Voice of the City), a prescript is destroyed the moment it is fulfilled or blown and otherwise at the end of its third Scene, and angelica left the Index pool too - she is now pool-less, like the 94 other Keypages that carry an empty pools table and still spawn.
 

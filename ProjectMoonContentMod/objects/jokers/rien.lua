@@ -20,6 +20,10 @@ SMODS.Joker {
         return {vars = { card.ability.extra.mult, card.ability.extra.soraDeathCounter, card.ability.extra.mult_mod,
 			PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.graceXchips, card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
 	end,
+	-- Rien carries the Karmic Consequence; destroying or selling him clears it.
+	remove_from_deck = function(self, card, from_debuff)
+		if not from_debuff and G.GAME then G.GAME.pmcmod_karma = 0 end
+	end,
 	add_to_deck = function(self, card, from_debuff)
 		
 		-- Shuffles prescripts
@@ -62,12 +66,6 @@ SMODS.Joker {
 						else
 							if not context.blueprint then card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod end
 						end
-					else
-						card.getting_sliced = true
-						G.E_MANAGER:add_event(Event({func = function()
-							card:juice_up(0.8, 0.8)
-							card:start_dissolve({G.C.RED}, nil, 1.6)
-						return true end }))
 					end
 				end
 			end

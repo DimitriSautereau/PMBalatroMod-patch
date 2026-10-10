@@ -1980,21 +1980,14 @@ return {
             j_pmcmod_rien = {
                 name = 'Rien',
                 text = {
-                    {"At the start of a Scene, if an {C:attention}Index{} Keypage is on the",
-                    "team and no {C:blue}Prescript{} is out, one is issued. A Prescript is",
-                    "destroyed when fulfilled, or after {C:attention}3 Scenes{}"},
-                    {"For every {C:blue}Grace of the City{}: {C:mult}+#3#{} Mult",
-                    "and {X:chips,C:white}X#6#{} Chips",
-                    "{C:inactive}(Grace also raises the odds of Index Keypages){}"},
-                    {"For every {C:red}Karmic Consequence{}: {X:mult,C:white}X#7#{} Mult",
-                    "and {C:chips}-#8#{} Chips"},
-                    {"Gain {C:mult}#3#{} Mult for every {C:blue}Prescript{} fullfilled.",
-                    "Destroy itself if the {C:blue}Prescript fails"},
-                    {"{C:attention}Bonus effect: {}If Sora is present and to the right, gains double",
-                    "this value. Sora dies after this effect triggers 3 times",
-                    "{C:inactive}(Total triggers: {C:red}#2#{C:inactive})",
-                    "{C:inactive}(Currently {C:mult}#1#{C:inactive} Mult)",
-                    "{C:inactive}Grace of the City: {C:blue}#4#{}    {C:inactive}Karmic Consequence: {C:red}#5#{}"},
+                    {"An {C:attention}Index{} Keypage issues a {C:blue}Prescript{} at the start of a",
+                    "Scene when none is out; it breaks when fulfilled or after {C:attention}3 Scenes{}"},
+                    {"Gains {C:mult}+#3#{} Mult for each Prescript fulfilled and each",
+                    "{C:blue}Grace of the City{}, plus {X:chips,C:white}X#6#{} Chips per Grace"},
+                    {"Each {C:red}Karmic Consequence{} costs {X:mult,C:white}X#7#{} Mult and",
+                    "{C:chips}-#8#{} Chips - destroying Rien clears them"},
+                    {"{C:attention}Sora{} to the right doubles this and dies after {C:attention}3{} triggers",
+                    "{C:inactive}Grace {C:blue}#4#{}  {C:inactive}Karma {C:red}#5#{}  {C:inactive}Triggers #2#  Mult #1#{}"},
                 },
                 unlock = {
                     'Win a run with the {C:attention}Ryoshu Keypage{}',
@@ -2780,8 +2773,7 @@ return {
                     "the end of its {C:attention}3rd Scene{}",
                     "Fulfilling one grants {C:blue}Grace of the City{},",
                     "failing one grants {C:red}Karmic Consequence{}",
-                    "While {C:attention}Voice of the City{} is held, fulfilment pays {C:gold}$15{}",
-                    "and failure takes all your money"
+                    "Fulfilling one grants the City's favour, failing one its consequence"
                 },
             },
             effect_perma={

@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'sora',
 	name = "Sora",
 	pronouns = "she_her",
-	config = { extra = { chips = 0, chips_mod = 20, mult = 0, xmult = 1, chargeStacks = 0, chargeHand = -1, soraDeathCounter = 0, rienPresent = false, rienPos = nil, locked = false, counter = 0 } },
+	config = { extra = { chips = 0, chips_mod = 20, mult = 0, xmult = 1, chargeStacks = 0, chargeHand = -1, chargeSpendHand = -1, soraDeathCounter = 0, rienPresent = false, rienPos = nil, locked = false, counter = 0 } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -109,8 +109,11 @@ SMODS.Joker {
 				PMCMOD.add_charge(PMCMOD.charge_gain() * card.ability.extra.chargeStacks)
 			end
 
+			-- One spend per hand, exactly as the Charge manager does it (other.lua:105) - without
+			-- this marker every scored card paid another 5 and stacked its own repetitions.
 			if context.repetition and context.cardarea == G.play and not context.blueprint
-				and PMCMOD.get_charge() >= 5 then
+				and PMCMOD.get_charge() >= 5 and card.ability.extra.chargeSpendHand ~= handKey then
+				card.ability.extra.chargeSpendHand = handKey
 				PMCMOD.add_charge(-5)
 				return { repetitions = card.ability.extra.chargeStacks }
 			end

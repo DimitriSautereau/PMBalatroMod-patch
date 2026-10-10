@@ -76,7 +76,8 @@ SMODS.Joker {
 				card.ability.extra.counter = 0
 
 				if stolen == 'e_negative' then
-					-- the one edition Sora wears rather than absorbs
+					-- the one edition Sora wears rather than absorbs, and the only steal that pays
+					card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_mod
 					card:set_edition('e_negative', true)
 				elseif stolen == 'e_foil' then
 					card.ability.extra.chips = card.ability.extra.chips + 50

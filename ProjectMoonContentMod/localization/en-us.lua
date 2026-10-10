@@ -2058,7 +2058,7 @@ return {
                 text = {
                     {"Steals an {C:dark_edition}Edition{} from any Keypage at the start of a",
                     "Scene and {C:attention}absorbs{} it: {C:dark_edition}Foil{} {C:chips}+50{}, {C:dark_edition}Holo{} {C:mult}+10{},",
-                    "{C:dark_edition}Poly{} {X:mult,C:white}X1.5{}, {C:dark_edition}Charge{} a stack - {C:dark_edition}Negative{} she wears herself"},
+                    "{C:dark_edition}Poly{} {X:mult,C:white}X1.5{}, {C:dark_edition}Charge{} a stack, {C:dark_edition}Negative{} she wears for {C:chips}+#2#{}"},
                     {"{C:dark_edition}Charge{} stacks scale what she feeds the pool, and each",
                     "one lets {C:attention}5 Charge{} buy her own keypage another trigger"},
                     {"After {C:attention}3 Scenes{} without stealing she transforms, keeping every",

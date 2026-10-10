@@ -2056,16 +2056,16 @@ return {
             j_pmcmod_sora = {
                 name = 'Sora',
                 text = {
-                    {"At the start of the Scene, Sora steals an {C:dark_edition}Edition",
-                    "from a random Keypage, gaining {C:chips}+#2#{} Chips in the process",
-                    "Sora can't steal the same Edition twice in a row"},
-                    {"After 3 Scenes without stealing an Edition, Sora",
-                    "reveals herself, doubling her current Chips count"},
-                    {"{C:attention}Bonus effect: {}If Rien is present and to the right, double the scoring Chips",
-                    "Sora dies after triggering 4 times",
-                    "{C:inactive}(Total triggers: {C:red}#3#{C:inactive})",
-                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)",
-                    "{C:inactive}Grace of the City: {C:blue}#4#{}    {C:inactive}Karmic Consequence: {C:red}#5#{}"},
+                    {"Steals an {C:dark_edition}Edition{} from any Keypage at the start of a",
+                    "Scene and {C:attention}absorbs{} it: {C:dark_edition}Foil{} {C:chips}+50{}, {C:dark_edition}Holo{} {C:mult}+10{},",
+                    "{C:dark_edition}Poly{} {X:mult,C:white}X1.5{}, {C:dark_edition}Charge{} a stack - {C:dark_edition}Negative{} she wears herself"},
+                    {"{C:dark_edition}Charge{} stacks scale what she feeds the pool and the",
+                    "triggers she buys; the {C:attention}5 Charge{} spend never changes"},
+                    {"After {C:attention}3 Scenes{} without stealing she transforms, keeping every",
+                    "absorbed value - {C:blue}Grace of the City{} then drives all three channels:"},
+                    {"{C:attention}Sora{} right of Rien doubles the Chips; she dies after {C:attention}5{} triggers",
+                    "{C:inactive}Absorbed {C:mult}+#6#{} {X:mult,C:white}X#7#{} {C:chips}+#1#{} {C:blue}#8#{} charge stacks",
+                    "{C:inactive}Grace {C:blue}#4#{}  Karma {C:red}#5#{}  Triggers #3#{}"},
                 },
                 unlock = {
                     'Win a run with the {C:attention}Rien Keypage{}'

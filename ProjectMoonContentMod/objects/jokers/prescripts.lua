@@ -41,6 +41,9 @@ SMODS.Joker {
 		end
 
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -134,6 +137,9 @@ SMODS.Joker {
 			tempText = localize('pmcmod_prescriptFulfilled')
 			statusColour = G.C.BLUE
 		end
+
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
 
 		if card.area and (card.area == G.jokers) then
 			main_end = {
@@ -253,6 +259,9 @@ SMODS.Joker {
 			statusColour = G.C.GOLD
 		end
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -339,6 +348,9 @@ SMODS.Joker {
 			statusColour = G.C.BLUE
 		end
 
+
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
 
 		if card.area and (card.area == G.jokers) then
 			main_end = {
@@ -427,6 +439,9 @@ SMODS.Joker {
 			statusColour = G.C.BLUE
 		end
 
+
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
 
 		if card.area and (card.area == G.jokers) then
 			main_end = {
@@ -523,6 +538,9 @@ SMODS.Joker {
 		end
 
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -618,6 +636,9 @@ SMODS.Joker {
 		end
 
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -710,6 +731,9 @@ SMODS.Joker {
 		end
 
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -799,6 +823,9 @@ SMODS.Joker {
 			statusColour = G.C.BLUE
 		end
 
+
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
 
 		if card.area and (card.area == G.jokers) then
 			main_end = {
@@ -891,6 +918,9 @@ SMODS.Joker {
 		end
 
 
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
+
 		if card.area and (card.area == G.jokers) then
 			main_end = {
 				{
@@ -982,6 +1012,9 @@ SMODS.Joker {
 			statusColour = G.C.BLUE
 		end
 
+
+		-- Receptions this page has seen; it breaks at the end of the third.
+		tempText = tempText .. "  " .. math.min(card.ability.extra.scenesAlive or 0, PMCMOD.PRESCRIPT_SCENES) .. "/" .. PMCMOD.PRESCRIPT_SCENES
 
 		if card.area and (card.area == G.jokers) then
 			main_end = {

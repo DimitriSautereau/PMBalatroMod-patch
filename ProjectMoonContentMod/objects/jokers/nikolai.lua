@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'nikolai',
 	name = "Nikolai",
 	pronouns = "she_her",
-	config = { extra = { mult = 0, mult_mod = 5, savedJokers = {}, highlightedJokerStatus = "" } },	
+	config = { extra = { mult = 0, mult_mod = 5, rcorpXmult = 1.5, savedJokers = {}, highlightedJokerStatus = "" } },	
 	unlocked = false,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -33,7 +33,7 @@ SMODS.Joker {
 			end
 		end
 
-    	return {vars = { card.ability.extra.mult, card.ability.extra.mult_mod, card.ability.extra.highlightedJokerStatus }}
+    	return {vars = { card.ability.extra.mult, card.ability.extra.mult_mod, card.ability.extra.highlightedJokerStatus, card.ability.extra.rcorpXmult }}
 	end,
 	calculate = function(self, card, context)
 		
@@ -60,9 +60,19 @@ SMODS.Joker {
         end
 
 		if context.joker_main then
-			return {
-				mult = card.ability.extra.mult
-			}
+			-- R Corp keypages give x1.5 Mult each while Nikolai is held. They compound:
+			-- three of them is 1.5^3 = x3.375.
+			local rcorp = 0
+			local jokers = (G.jokers and G.jokers.cards) or {}
+			for i = 1, #jokers do
+				local pools = jokers[i].config and jokers[i].config.center and jokers[i].config.center.pools
+				if pools and pools.RCorp then rcorp = rcorp + 1 end
+			end
+			local ret = { mult = card.ability.extra.mult }
+			if rcorp > 0 then
+				ret.xmult = card.ability.extra.rcorpXmult ^ rcorp
+			end
+			return ret
 		end
 		
 	end,

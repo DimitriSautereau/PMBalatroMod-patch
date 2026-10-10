@@ -41,4 +41,8 @@ Other fixes
 - Manifest now unlocks a still-locked True Version (and adds it to the collection) instead of showing "Locked" and burning the Spectral; 18 of its 21 targets start locked. Seeded and challenge runs still refuse unlocks.
 - Two texture pack badge keys that were referenced but never defined, and a stray brace in pt_BR.
 - Silent Deck gives +1 hand and +1 discard instead of +2/+2, and Kong Sihui pays $5 instead of $2. The deck change had to be applied to objects/backs/silent.lua: the loader only reads objects/backs/, so objects/decks/ is a dead duplicate of all 11 decks.
+- Charge edition weight 3 -> 17, and maxim/rudolph only enter the shop pool while a Keypage holding Charge is on the team.
+- Maxim reworked onto the shared Charge pool: scored Face cards add 5 Charge, scored number cards spend 1 Charge to trigger twice, +2 Chips per dollar held, and $1 per 10 Charge at the end of the Scene.
+- Rudolph reworked (his calculate was empty, so he did nothing): Charge cards trigger once more, a Charge Keypage gains $1 sell value each time it triggers, he gains Mult equal to the other Keypages' total sell value, and selling anything feeds its sell value into the Charge pool.
+- Nikolai: R Corp Keypages give x1.5 Mult each while he is held (compounding - three is x3.375), on top of his catalogue Mult.
 

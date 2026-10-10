@@ -381,7 +381,8 @@ return {
                     "Catalogues every {C:attention}directly bought Keypage",
                     "Gain {C:mult}#2#{} Mult for every Keypage catalogued",
                     "{C:inactive}Currently {C:mult}#1#{} Mult",
-                    "{C:inactive}Selected Keypage: {C:attention}#3#{}"
+                    "{C:inactive}Selected Keypage: {C:attention}#3#{}",
+                    "{C:attention}R Corp{} Keypages give {X:mult,C:white}X#4#{} Mult each"
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Nikolai Keypage{}',

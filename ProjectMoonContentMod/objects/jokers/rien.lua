@@ -49,9 +49,10 @@ SMODS.Joker {
 			end		
 
 
-			for i=1, #card.ability.extra.prescriptListShuffled do
-				--print("cardDestroyed")
-				if context.card.config.center.key == card.ability.extra.prescriptListShuffled[i] then
+			-- the driver draws from a shared list, so match the key itself
+			do
+				if type(context.card.config.center.key) == 'string'
+					and context.card.config.center.key:sub(1, 18) == 'j_pmcmod_prescript' then
 					--print("prescript destroyed")
 					if context.card.prescriptFullfilled then
 						--print("prescript fullfilled")
@@ -101,29 +102,6 @@ SMODS.Joker {
 
 		end
 
-		-- Increase the prescript counter at the end of the boss
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then	
-
-			
-
-			card.ability.extra.currentPrescript = card.ability.extra.currentPrescript + 1
-			card.ability.extra.prescriptActive = false
-			card.ability.extra.allowPrescriptCheck = true
-			
-			if card.ability.extra.currentPrescript >= 12 then
-				card.ability.extra.currentPrescript = 1
-			end
-			
-		end
-		
-		
-
-		-- Spawn the next prescript
-		if context.ending_shop and card.ability.extra.prescriptActive == false and card.ability.extra.allowPrescriptCheck and card.ability.extra.currentPrescript <= 11 then
-			local prescript = SMODS.add_card({ key = card.ability.extra.prescriptListShuffled[card.ability.extra.currentPrescript], stickers = {"eternal"}, force_stickers = true })
-			PMCMOD.claim_slot(prescript)
-			card.ability.extra.prescriptActive = true
-		end
 
 		if context.joker_main then
 			return {
@@ -136,7 +114,7 @@ SMODS.Joker {
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_spiders'), HEX('121212'), HEX('d90000'), 1.2 )
  	end,
 	get_weight = function(self, weight)
-    	return PMCMOD.bonus_weight(weight, #SMODS.find_card('j_pmcmod_sora')*G.GAME.round_resets.ante)
+    	return PMCMOD.bonus_weight(weight, #SMODS.find_card('j_pmcmod_sora')*G.GAME.round_resets.ante + PMCMOD.grace())
 	end,
 	check_for_unlock = function(self, args)
         for _, v in pairs(G.P_CENTER_POOLS["Joker"]) do

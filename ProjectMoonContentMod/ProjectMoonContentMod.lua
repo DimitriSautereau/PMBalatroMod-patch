@@ -42,6 +42,120 @@ function PMCMOD.has_charge_keypage()
     return false
 end
 
+-- ---------------------------------------------------------------------------
+-- Prescripts and the Index
+-- ---------------------------------------------------------------------------
+-- Prescripts last PRESCRIPT_SCENES Scenes, then resolve: Grace of the City if the page's objective
+-- was met, Karmic Consequence if it was not. Both are run-wide counters (shared across every
+-- prescript). Grace also makes Index Keypages more likely to be offered - see PMCMOD.index_weight.
+-- The old money swing ($15 on fulfilment, wipe on failure) left the prescripts and now happens only
+-- while Voice of the City is held.
+PMCMOD.PRESCRIPT_SCENES = 3
+
+-- The Index Keypages that drive the prescript cycle. angelica is deliberately absent: she carries
+-- the Index pool as her only pool, so dropping it would leave her with nowhere to come from.
+PMCMOD.INDEX_POOL_MEMBERS = {
+    'esther', 'gloria', 'hubert', 'rien', 'sora',
+}
+
+function PMCMOD.grace()
+    return (G.GAME and G.GAME.pmcmod_grace) or 0
+end
+
+function PMCMOD.karma()
+    return (G.GAME and G.GAME.pmcmod_karma) or 0
+end
+
+function PMCMOD.voice_of_the_city_in_play()
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    for i = 1, #jokers do
+        local c = jokers[i].config and jokers[i].config.center
+        if c and c.key == 'j_pmcmod_voiceOfTheCity' then return true end
+    end
+    return false
+end
+
+-- aspects are the _alt variants - they do not count as Index members
+function PMCMOD.is_aspect(key)
+    return type(key) == 'string' and key:sub(-4) == '_alt'
+end
+
+function PMCMOD.index_member_in_play()
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    for i = 1, #jokers do
+        local center = jokers[i].config and jokers[i].config.center
+        if center and center.pools and center.pools.Index and not PMCMOD.is_aspect(center.key) then
+            return true
+        end
+    end
+    return false
+end
+
+function PMCMOD.prescript_in_play()
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    for i = 1, #jokers do
+        local center = jokers[i].config and jokers[i].config.center
+        if center and type(center.key) == 'string' and center.key:sub(1, 18) == 'j_pmcmod_prescript' then
+            return true
+        end
+    end
+    return false
+end
+
+-- Scenes survived. Prescripts call this from their end_of_round branch and resolve when it is true.
+function PMCMOD.prescript_expired(card)
+    if not (card and card.ability and card.ability.extra) then return false end
+    card.ability.extra.scenesAlive = (card.ability.extra.scenesAlive or 0) + 1
+    return card.ability.extra.scenesAlive >= PMCMOD.PRESCRIPT_SCENES
+end
+
+function PMCMOD.grant_grace()
+    if not G.GAME then return end
+    G.GAME.pmcmod_grace = (G.GAME.pmcmod_grace or 0) + 1
+    -- the Index pays out only while its Voice is listening
+    if PMCMOD.voice_of_the_city_in_play() then ease_dollars(15) end
+end
+
+function PMCMOD.grant_karma()
+    if not G.GAME then return end
+    G.GAME.pmcmod_karma = (G.GAME.pmcmod_karma or 0) + 1
+    if PMCMOD.voice_of_the_city_in_play() then ease_dollars(-G.GAME.dollars, true) end
+end
+
+-- Grace makes Index Keypages more likely: x2 each, capped by PMCMOD.bonus_weight like everything else.
+function PMCMOD.index_weight(weight)
+    return PMCMOD.bonus_weight(weight, PMCMOD.grace())
+end
+
+-- Spawns the next prescript while an Index member is on the team and none is out. Driven from the
+-- Card:calculate_joker wrapper on ending_shop, once per shop.
+function PMCMOD.prescript_driver()
+    if not (G.GAME and G.jokers) then return end
+    local rr = G.GAME.round_resets or {}
+    local shopKey = (rr.ante or 0) * 100 + (G.GAME.round or 0)
+    if G.GAME.pmcmod_prescript_shopKey == shopKey then return end
+    G.GAME.pmcmod_prescript_shopKey = shopKey
+
+    if not PMCMOD.index_member_in_play() then return end
+    if PMCMOD.prescript_in_play() then return end
+
+    G.GAME.pmcmod_prescript_list = G.GAME.pmcmod_prescript_list
+        or Shuffle({
+            "j_pmcmod_prescript1", "j_pmcmod_prescript2", "j_pmcmod_prescript3",
+            "j_pmcmod_prescript4", "j_pmcmod_prescript5", "j_pmcmod_prescript6",
+            "j_pmcmod_prescript7", "j_pmcmod_prescript8", "j_pmcmod_prescript9",
+            "j_pmcmod_prescript10", "j_pmcmod_prescript11",
+        }, 'pmcmod_prescripts')
+    G.GAME.pmcmod_prescript_index = ((G.GAME.pmcmod_prescript_index or 0) % #G.GAME.pmcmod_prescript_list) + 1
+
+    local spawned = SMODS.add_card({
+        key = G.GAME.pmcmod_prescript_list[G.GAME.pmcmod_prescript_index],
+        stickers = { "eternal" },
+        force_stickers = true,
+    })
+    PMCMOD.claim_slot(spawned)
+end
+
 -- Rudolph's four effects are all "while Rudolph is on the team", so they need to be visible to
 -- events that happen outside his own calculate: other cards triggering, and anything being sold.
 function PMCMOD.rudolph_in_play()
@@ -183,6 +297,11 @@ function PMCMOD.install_trigger_reporter()
 
     function Card:calculate_joker(context)
         local ret = original(self, context)
+        -- the prescript cycle is driven here: this wrapper is the only place that sees
+        -- ending_shop without needing a specific Keypage on the team
+        if context and context.ending_shop then
+            PMCMOD.prescript_driver()
+        end
         -- Rudolph: a Keypage holding Charge gains $1 of sell value every time it triggers.
         if ret and self.ability and self.ability.set == 'Joker' and not self.debuff
             and self.edition and self.edition.key == 'e_pmcmod_charge'

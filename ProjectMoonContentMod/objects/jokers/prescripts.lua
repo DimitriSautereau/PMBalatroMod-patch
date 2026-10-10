@@ -74,7 +74,7 @@ SMODS.Joker {
             end
         end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 
 				card.getting_sliced = true
@@ -87,12 +87,10 @@ SMODS.Joker {
 				
 				if card.ability.extra.prescriptFullfilled then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -179,7 +177,7 @@ SMODS.Joker {
 			end
 		end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -191,11 +189,9 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 					card.prescriptFullfilled = false
 				end
 		end
@@ -283,7 +279,7 @@ SMODS.Joker {
             card.ability.extra.prescriptFailed = true
         end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -294,13 +290,11 @@ SMODS.Joker {
 				G.GAME.pool_flags.prescript3Extinct = true
 
 				if card.ability.extra.prescriptFailed == true then
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 					card.prescriptFullfilled = false
 				else
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				end
 		end
 		
@@ -373,7 +367,7 @@ SMODS.Joker {
 			card.ability.extra.prescriptFullfilled = true
 		end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -385,12 +379,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -470,7 +462,7 @@ SMODS.Joker {
 			
 		end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -482,12 +474,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFailed == true then
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				else
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				end
 		end
 		
@@ -565,7 +555,7 @@ SMODS.Joker {
 			end
 		end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -579,12 +569,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -659,7 +647,7 @@ SMODS.Joker {
             end
         end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -673,12 +661,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -751,7 +737,7 @@ SMODS.Joker {
 				card.ability.extra.prescriptFullfilled = true
         end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -765,12 +751,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -844,7 +828,7 @@ SMODS.Joker {
             end
         end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -858,12 +842,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -938,7 +920,7 @@ SMODS.Joker {
 			end
 		end
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -952,12 +934,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		
@@ -1072,7 +1052,7 @@ SMODS.Joker {
 
 		end
 		
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then			
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint and PMCMOD.prescript_expired(card) then			
 				-- This part plays the animation.
 				card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
@@ -1086,12 +1066,10 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
-					return{
-						dollars = 15
-					}
+					PMCMOD.grant_grace()
 				else
 					card.prescriptFullfilled = false
-					ease_dollars(-G.GAME.dollars, true)
+					PMCMOD.grant_karma()
 				end
 		end
 		

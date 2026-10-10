@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'voiceOfTheCity',
 	name = "Voice of the City",
 	pronouns = "it_its",
-	config = { extra = { prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0} },
+	config = { extra = { } },
 	no_collection = true, 
 	perishable_compat = true,   
 	eternal_compat = true,
@@ -16,30 +16,15 @@ SMODS.Joker {
 
  	},
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.prescriptActive } }
+		info_queue[#info_queue + 1] = {set = "Other", key = "effect_prescript"}
+		return { vars = { PMCMOD.grace(), PMCMOD.karma(), PMCMOD.PRESCRIPT_SCENES } }
 	end,
-	add_to_deck = function(self, card, from_debuff)
-        local prescriptListUnshuffled = {"j_pmcmod_prescript1", "j_pmcmod_prescript2", "j_pmcmod_prescript3", "j_pmcmod_prescript4", "j_pmcmod_prescript5", "j_pmcmod_prescript6", "j_pmcmod_prescript7", "j_pmcmod_prescript8", "j_pmcmod_prescript9", "j_pmcmod_prescript10", "j_pmcmod_prescript11"}
-		
-		card.ability.extra.prescriptListShuffled = Shuffle(prescriptListUnshuffled, 'pmcmod_voiceOfTheCity_prescripts')
-    end,
+	-- The Voice is the Index's cashier: while it is on the team, every prescript that resolves is
+	-- settled in money - $15 when it was fulfilled, everything you hold when it was not.
+	-- PMCMOD.grant_grace and PMCMOD.grant_karma apply that; this card holds no state of its own.
 	calculate = function(self, card, context)
 
-		if context.end_of_round and not context.repetition and context.game_over == false and G.GAME.last_blind and G.GAME.last_blind.boss and not context.blueprint then	
-			card.ability.extra.currentPrescript = card.ability.extra.currentPrescript + 1
-			card.ability.extra.prescriptActive = false
-
-			if card.ability.extra.currentPrescript >= 12 then
-				card.ability.extra.currentPrescript = 1
-			end
-		end
-
-		if context.ending_shop and card.ability.extra.prescriptActive == false and G.GAME.round_resets.ante > 1 and card.ability.extra.currentPrescript <= 11 then
-			local prescript = SMODS.add_card({ key = card.ability.extra.prescriptListShuffled[card.ability.extra.currentPrescript], stickers = {"eternal"}, force_stickers = true })
-			PMCMOD.claim_slot(prescript)
-			card.ability.extra.prescriptActive = true
-		end
-    end,
+	end,
 	in_pool = function(self, args)
         -- never in the random pool: summon/transform-only (was G.GAME.pool_flags.fake_robot_flag)
         return false

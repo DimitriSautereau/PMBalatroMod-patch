@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'sora',
 	name = "Sora",
 	pronouns = "she_her",
-	config = { extra = { chips = 0, chips_mod = 20, mult = 0, xmult = 1, chargeStacks = 0, chargeHand = -1, chargeSpendHand = -1, soraDeathCounter = 0, rienPresent = false, rienPos = nil, locked = false, counter = 0 } },
+	config = { extra = { chips = 0, chips_mod = 20, mult = 0, xmult = 1, chargeStacks = 0, chargeHand = -1, chargeSpendHand = -1, chargeTriggers = 0, soraDeathCounter = 0, rienPresent = false, rienPos = nil, locked = false, counter = 0 } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -57,10 +57,14 @@ SMODS.Joker {
 		if context.setting_blind and not card.ability.extra.locked and not context.blueprint then
 
 			-- any Keypage holding an edition is fair game, however many Sora has taken already
+			local wearingNegative = card.edition and card.edition.key == 'e_negative'
 			local editionJokers = {}
 			for i = 1, #G.jokers.cards do
-				if G.jokers.cards[i] ~= card and G.jokers.cards[i].edition then
-					editionJokers[#editionJokers + 1] = G.jokers.cards[i]
+				local other = G.jokers.cards[i]
+				-- she wears one Negative and never takes a second
+				if other ~= card and other.edition
+					and not (wearingNegative and other.edition.key == 'e_negative') then
+					editionJokers[#editionJokers + 1] = other
 				end
 			end
 
@@ -69,7 +73,6 @@ SMODS.Joker {
 				local stolen = eligible_card.edition.key
 				eligible_card:set_edition()          -- it always leaves its owner
 
-				card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_mod
 				card.ability.extra.counter = 0
 
 				if stolen == 'e_negative' then
@@ -109,13 +112,14 @@ SMODS.Joker {
 				PMCMOD.add_charge(PMCMOD.charge_gain() * card.ability.extra.chargeStacks)
 			end
 
-			-- One spend per hand, exactly as the Charge manager does it (other.lua:105) - without
-			-- this marker every scored card paid another 5 and stacked its own repetitions.
-			if context.repetition and context.cardarea == G.play and not context.blueprint
-				and PMCMOD.get_charge() >= 5 and card.ability.extra.chargeSpendHand ~= handKey then
+			-- 5 Charge buys her own keypage another trigger, once per hand. This used to sit in
+			-- context.repetition - the card-retrigger context - which is why she retriggered played
+			-- cards. Per stack her keypage triggers once more, for the same single spend.
+			if context.joker_main and not context.blueprint and PMCMOD.get_charge() >= 5
+				and card.ability.extra.chargeSpendHand ~= handKey then
 				card.ability.extra.chargeSpendHand = handKey
 				PMCMOD.add_charge(-5)
-				return { repetitions = card.ability.extra.chargeStacks }
+				card.ability.extra.chargeTriggers = card.ability.extra.chargeStacks
 			end
 		end
 
@@ -137,24 +141,26 @@ SMODS.Joker {
 
 			local ex = card.ability.extra
 			local ret = {}
+			-- her keypage triggers once more per Charge stack spent on it
+			local applications = 1 + (ex.chargeTriggers or 0)
 
 			if ex.locked then
 				-- second form: the net Grace (Grace less Karma, which can go negative) is added to
 				-- each channel on top of what she absorbed
 				local sg = PMCMOD.sora_grace()
-				ret.chips = ex.chips * multiplier + 25 * sg
-				ret.mult = ex.mult + 5 * sg
+				ret.chips = (ex.chips * multiplier + 25 * sg) * applications
+				ret.mult = (ex.mult + 5 * sg) * applications
 				local xm = ex.xmult + 0.5 * sg
-				if xm > 0 then ret.xmult = xm end
+				if xm > 0 then ret.xmult = xm ^ applications end
 			else
-				ret.chips = ex.chips * multiplier
-				if ex.mult > 0 then ret.mult = ex.mult end
-				if ex.xmult ~= 1 then ret.xmult = ex.xmult end
+				ret.chips = ex.chips * multiplier * applications
+				if ex.mult > 0 then ret.mult = ex.mult * applications end
+				if ex.xmult ~= 1 then ret.xmult = ex.xmult ^ applications end
 			end
 
 			return ret
 		end
-end,
+    end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_spiders'), HEX('121212'), HEX('d90000'), 1.2 )
  	end,

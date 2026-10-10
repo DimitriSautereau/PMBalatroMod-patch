@@ -28,7 +28,7 @@ SMODS.Joker {
 
 
 
-        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, card.ability.extra.soraDeathCounter } }
+        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, card.ability.extra.soraDeathCounter, PMCMOD.grace(), PMCMOD.karma() } }
 	end,
 	calculate = function(self, card, context)
 

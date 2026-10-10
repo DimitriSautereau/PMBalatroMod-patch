@@ -1983,12 +1983,18 @@ return {
                     {"At the start of a Scene, if an {C:attention}Index{} Keypage is on the",
                     "team and no {C:blue}Prescript{} is out, one is issued. A Prescript is",
                     "destroyed when fulfilled, or after {C:attention}3 Scenes{}"},
+                    {"For every {C:blue}Grace of the City{}: {C:mult}+#3#{} Mult",
+                    "and {X:chips,C:white}X#6#{} Chips",
+                    "{C:inactive}(Grace also raises the odds of Index Keypages){}"},
+                    {"For every {C:red}Karmic Consequence{}: {X:mult,C:white}X#7#{} Mult",
+                    "and {C:chips}-#8#{} Chips"},
                     {"Gain {C:mult}#3#{} Mult for every {C:blue}Prescript{} fullfilled.",
                     "Destroy itself if the {C:blue}Prescript fails"},
                     {"{C:attention}Bonus effect: {}If Sora is present and to the right, gains double",
                     "this value. Sora dies after this effect triggers 3 times",
                     "{C:inactive}(Total triggers: {C:red}#2#{C:inactive})",
-                    "{C:inactive}(Currently {C:mult}#1#{C:inactive} Mult)"},
+                    "{C:inactive}(Currently {C:mult}#1#{C:inactive} Mult)",
+                    "{C:inactive}Grace of the City: {C:blue}#4#{}    {C:inactive}Karmic Consequence: {C:red}#5#{}"},
                 },
                 unlock = {
                     'Win a run with the {C:attention}Ryoshu Keypage{}',
@@ -2065,7 +2071,8 @@ return {
                     {"{C:attention}Bonus effect: {}If Rien is present and to the right, double the scoring Chips",
                     "Sora dies after triggering 4 times",
                     "{C:inactive}(Total triggers: {C:red}#3#{C:inactive})",
-                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"},
+                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)",
+                    "{C:inactive}Grace of the City: {C:blue}#4#{}    {C:inactive}Karmic Consequence: {C:red}#5#{}"},
                 },
                 unlock = {
                     'Win a run with the {C:attention}Rien Keypage{}'
@@ -2766,11 +2773,15 @@ return {
             effect_prescript={
                 name="Prescript",
                 text={
-                    "Gives you a {C:attention}random task{} that must",
-                    "be completed by the end of the Act",
-                    "Completing a Prescript gives you {C:gold}$15{}",
-                    "Failing to complete a Prescript sets",
-                    "your money to {C:red}$0{}"
+                    "Gives you a {C:attention}random task{}, issued at the",
+                    "start of a Scene while an {C:attention}Index{} Keypage is",
+                    "on the team and none is already out",
+                    "Destroyed the moment it is {C:attention}fulfilled{}, or at",
+                    "the end of its {C:attention}3rd Scene{}",
+                    "Fulfilling one grants {C:blue}Grace of the City{},",
+                    "failing one grants {C:red}Karmic Consequence{}",
+                    "While {C:attention}Voice of the City{} is held, fulfilment pays {C:gold}$15{}",
+                    "and failure takes all your money"
                 },
             },
             effect_perma={

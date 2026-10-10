@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'rien',
 	name = "Rien",
 	pronouns = "he_him",
-	config = { extra = { mult = 0, mult_mod = 15,  prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0, soraPresent = false, soraPos = nil, soraDeathCounter = 0, allowPrescriptCheck = false } },
+	config = { extra = { mult = 0, mult_mod = 15,  graceXchips = 1.2, karmaXmult = 0.9, karmaChips = 10, prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0, soraPresent = false, soraPos = nil, soraDeathCounter = 0, allowPrescriptCheck = false } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -17,7 +17,8 @@ SMODS.Joker {
 		["Index"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.mult, card.ability.extra.soraDeathCounter, card.ability.extra.mult_mod, } }
+        return {vars = { card.ability.extra.mult, card.ability.extra.soraDeathCounter, card.ability.extra.mult_mod,
+			PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.graceXchips, card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
 	end,
 	add_to_deck = function(self, card, from_debuff)
 		
@@ -103,9 +104,16 @@ SMODS.Joker {
 
 
 		if context.joker_main then
-			return {
-				mult = card.ability.extra.mult
+			-- Grace of the City pays out, Karmic Consequence takes its cut.
+			local grace = PMCMOD.grace()
+			local karma = PMCMOD.karma()
+			local ret = {
+				mult = card.ability.extra.mult + card.ability.extra.mult_mod * grace,
+				xmult = card.ability.extra.karmaXmult ^ karma,
 			}
+			if grace > 0 then ret.xchips = card.ability.extra.graceXchips * grace end
+			if karma > 0 then ret.chips = -card.ability.extra.karmaChips * karma end
+			return ret
 		end
 
     end,

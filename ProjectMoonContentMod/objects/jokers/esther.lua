@@ -18,7 +18,7 @@ SMODS.Joker {
  	},
 	loc_vars = function (self, info_queue, card)
 		info_queue[#info_queue+1] = {set = "Other", key = "effect_singleton"}
-    	return {vars = { card.ability.extra.xchips }}
+    	return {vars = { card.ability.extra.xchips , PMCMOD.grace(), PMCMOD.karma() }}
 	end,
 	calculate = function(self, card, context)
 		

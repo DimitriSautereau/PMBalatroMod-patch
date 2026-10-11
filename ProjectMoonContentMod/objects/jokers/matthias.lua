@@ -26,6 +26,10 @@ SMODS.Joker {
         return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, PMCMOD.pair_trigger_display(card) } }
 	end,
 	calculate = function(self, card, context)
+		-- the pairing is locked in at the start of the Scene and held for it
+		if context.setting_blind and not context.blueprint then
+			card.ability.extra.kiraPresent = PMCMOD.pair_linked(card)
+		end
 		if context.before then
 			card.ability.extra.kiraPresent = false
 			for i = 1, #G.jokers.cards do
@@ -36,7 +40,6 @@ SMODS.Joker {
 			end
 
 			-- only the partner exactly on the correct side counts
-			card.ability.extra.kiraPresent = PMCMOD.pair_linked(card)
 			
 		end
 

@@ -37,22 +37,22 @@ SMODS.Joker {
 		if G.GAME then G.GAME.pool_flags.sora_extinct = true end
 	end,
 	calculate = function(self, card, context)
-
-		if context.before then
-			-- Rien has to be exactly to her left (she is the apprentice)
+		-- the pairing is locked in at the start of the Scene and held for it
+		if context.setting_blind and not context.blueprint then
 			card.ability.extra.rienPresent = PMCMOD.pair_linked(card)
 		end
 
-		-- three Receptions WITHOUT stealing and she reveals her second form. A fresh field, so a
-		-- leftover value in the old `counter` cannot trip it early.
-		if not card.ability.extra.locked and not context.blueprint then
-			local reception = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
-			if card.ability.extra.lastReception ~= reception then
-				card.ability.extra.lastReception = reception
-				card.ability.extra.dryReceptions = (card.ability.extra.dryReceptions or 0) + 1
-				if card.ability.extra.dryReceptions >= 3 then
-					card.ability.extra.locked = true
-				end
+		if context.before then
+			-- Rien has to be exactly to her left (she is the apprentice)
+		end
+
+		-- three Receptions WITHOUT stealing and she reveals her second form. Gated on setting_blind,
+		-- which fires exactly once per Scene - running this on every calculate call, keyed on
+		-- G.GAME.round, advanced it several times inside a single Scene.
+		if context.setting_blind and not card.ability.extra.locked and not context.blueprint then
+			card.ability.extra.dryReceptions = (card.ability.extra.dryReceptions or 0) + 1
+			if card.ability.extra.dryReceptions >= 3 then
+				card.ability.extra.locked = true
 			end
 		end
 

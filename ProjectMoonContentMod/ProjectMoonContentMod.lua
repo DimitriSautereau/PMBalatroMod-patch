@@ -285,7 +285,9 @@ function PMCMOD.prescript_driver()
     if G.GAME.pmcmod_prescript_sceneKey == sceneKey then return end
     G.GAME.pmcmod_prescript_sceneKey = sceneKey
 
-    if not PMCMOD.index_member_in_play() then return end
+    -- an Index Keypage, or the Voice of the City itself: the Voice speaks for the Index even
+    -- when no member of it is on the team
+    if not (PMCMOD.index_member_in_play() or PMCMOD.voice_of_the_city_in_play()) then return end
     if PMCMOD.prescript_in_play() then return end
 
     -- A fresh draw each time. This used a Shuffle with the fixed seed 'pmcmod_prescripts', so

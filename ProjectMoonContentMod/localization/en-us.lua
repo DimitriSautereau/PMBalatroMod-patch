@@ -2597,8 +2597,8 @@ return {
             j_pmcmod_voiceOfTheCity = {
                 name = 'Voice of the City',
                 text = {
-                    {"At the start of a Scene, if an {C:attention}Index{} Keypage is",
-                    "on the team and no {C:blue}Prescript{} is out, one is issued"},
+                    {"At the start of a Scene, if an {C:attention}Index{} Keypage or this",
+                    "{C:attention}Voice{} is on the team and none is out, one is issued"},
                     {"A Prescript is destroyed as soon as it is",
                     "fulfilled, or at the end of its {C:attention}#3#rd Scene{}"},
                     {"When one resolves, while this Voice is held:",

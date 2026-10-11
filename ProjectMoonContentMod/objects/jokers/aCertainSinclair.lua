@@ -51,7 +51,8 @@ SMODS.Joker {
 
 			if right and right.calculate_joker and card.ability.extra.counter > 0 then
 				card_eval_status_text(card, 'extra', nil, nil, nil, {
-					message = localize { type = 'variable', key = 'pmcmod_sinclairAgain', vars = { card.ability.extra.counter } },
+					-- plain key: the variable dictionary only holds vanilla keys
+					message = localize('pmcmod_sinclairAgain') .. ' x' .. tostring(card.ability.extra.counter),
 					colour = G.C.BLUE,
 				})
 				for _ = 1, card.ability.extra.counter do

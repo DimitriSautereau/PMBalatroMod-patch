@@ -19,7 +19,7 @@ SMODS.Joker {
  	},
 	loc_vars = function(self, info_queue, card)
         return {vars = { card.ability.extra.mult, PMCMOD.pair_trigger_display(card), card.ability.extra.mult_mod,
-			PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.graceXchips, card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
+			PMCMOD.grace(), PMCMOD.karma(), 1 + card.ability.extra.graceXchips * PMCMOD.grace(), card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
 	end,
 	-- Rien carries the Karmic Consequence; destroying or selling him clears it.
 	remove_from_deck = function(self, card, from_debuff)
@@ -107,7 +107,8 @@ SMODS.Joker {
 				mult = card.ability.extra.mult + card.ability.extra.mult_mod * grace,
 				xmult = card.ability.extra.karmaXmult ^ karma,
 			}
-			if grace > 0 then ret.xchips = card.ability.extra.graceXchips * grace end
+			-- a multiplier, not a flat amount: X1.0 with no Grace, X2.0 at five
+			if grace > 0 then ret.xchips = 1 + card.ability.extra.graceXchips * grace end
 			if karma > 0 then ret.chips = -card.ability.extra.karmaChips * karma end
 			return ret
 		end

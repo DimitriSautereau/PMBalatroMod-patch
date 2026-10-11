@@ -118,6 +118,19 @@ function PMCMOD.pair_linked(card)
     return false
 end
 
+-- The shared count lives in G.GAME, so a card's tooltip has no way to know it changed. Mirroring
+-- the value onto both cards of the pair (ability.extra.pairCount) gives the UI something to notice.
+function PMCMOD.pair_mirror(father, value)
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    local apprentice = PMCMOD.PAIRS[father]
+    for i = 1, #jokers do
+        local key = PMCMOD.bare_key(jokers[i].config and jokers[i].config.center and jokers[i].config.center.key)
+        if (key == father or key == apprentice) and jokers[i].ability and jokers[i].ability.extra then
+            jokers[i].ability.extra.pairCount = value
+        end
+    end
+end
+
 -- For tooltips only: the shared count plus whether the pair is actually linked right now, so the
 -- player can see why it is or is not rising.
 function PMCMOD.pair_trigger_display(card)
@@ -137,6 +150,7 @@ function PMCMOD.set_pair_trigger(card, n)
     if not father or not G.GAME then return end
     G.GAME.pmcmod_pair_triggers = G.GAME.pmcmod_pair_triggers or {}
     G.GAME.pmcmod_pair_triggers[father] = n or 0
+    PMCMOD.pair_mirror(father, n or 0)
 end
 
 function PMCMOD.add_pair_trigger(card, n)
@@ -144,6 +158,7 @@ function PMCMOD.add_pair_trigger(card, n)
     if not father or not G.GAME then return end
     G.GAME.pmcmod_pair_triggers = G.GAME.pmcmod_pair_triggers or {}
     G.GAME.pmcmod_pair_triggers[father] = (G.GAME.pmcmod_pair_triggers[father] or 0) + (n or 1)
+    PMCMOD.pair_mirror(father, G.GAME.pmcmod_pair_triggers[father])
 end
 
 -- What Sora reads: the City's favour net of its consequences. Negative when Karma outweighs Grace.

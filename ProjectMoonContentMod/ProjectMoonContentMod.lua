@@ -125,7 +125,8 @@ function PMCMOD.pair_mirror(father, value)
     local apprentice = PMCMOD.PAIRS[father]
     for i = 1, #jokers do
         local key = PMCMOD.bare_key(jokers[i].config and jokers[i].config.center and jokers[i].config.center.key)
-        if (key == father or key == apprentice) and jokers[i].ability and jokers[i].ability.extra then
+        if (key == father or key == apprentice) and jokers[i].ability
+            and type(jokers[i].ability.extra) == 'table' then
             jokers[i].ability.extra.pairCount = value
         end
     end
@@ -330,7 +331,8 @@ function PMCMOD.queue_index_return(sold)
     local jokers = (G.jokers and G.jokers.cards) or {}
     for i = 1, #jokers do
         local extra = jokers[i].ability and jokers[i].ability.extra
-        if extra and extra.selectedJoker == key then
+        -- extra is a plain number on some jokers (config = {extra = 1, ...})
+        if type(extra) == 'table' and extra.selectedJoker == key then
             demanded = true
             break
         end
@@ -338,7 +340,9 @@ function PMCMOD.queue_index_return(sold)
     if not demanded then return end
 
     local keep = {}
-    for k, v in pairs(sold.ability.extra or {}) do keep[k] = v end
+    if type(sold.ability.extra) == 'table' then
+        for k, v in pairs(sold.ability.extra) do keep[k] = v end
+    end
     for _, k in ipairs(PMCMOD.INDEX_RETURN_VOLATILE) do keep[k] = nil end
 
     G.GAME.pmcmod_index_return = G.GAME.pmcmod_index_return or {}

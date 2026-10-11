@@ -2090,8 +2090,9 @@ return {
                 name = 'Kira',
                 text = {
                     {"Burn Card gives {C:gold}$#2#{}"},
-                    {"Dies after {C:attention}3{} hands of Burn Cards and is",
-                    "{C:inactive}banned from the pool{}  {C:inactive}(Total triggers: {C:red}#1#{C:inactive}){}"},
+                    {"Dies after {C:attention}3{} hands of Burn Cards, is banned",
+                    "{C:inactive}from the pool{} and spends a {C:attention}Laevateinn{} counter",
+                    "{C:inactive}(Total triggers: {C:red}#1#{C:inactive}){}"},
                 },
                 unlock = {
                     'Win a run with the {C:attention}Matthias Keypage{}'

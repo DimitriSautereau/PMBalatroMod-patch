@@ -29,7 +29,7 @@ SMODS.Joker {
 
 
 
-        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, card.ability.extra.soraDeathCounter,
+        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, PMCMOD.pair_triggers(card),
             PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.chargeStacks, PMCMOD.sora_grace() } }
 	end,
 	-- taken once and never offered again
@@ -39,21 +39,8 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 
 		if context.before then
-			card.ability.extra.rienPresent = false
-			for i = 1, #G.jokers.cards do
-				if G.jokers.cards[i] == card then
-					card.ability.extra.currentPosition = i
-					break
-				end
-			end
-
 			-- Rien has to be exactly to her right
-			local right = G.jokers.cards[(card.ability.extra.currentPosition or 0) + 1]
-			if right and right.config.center.key == "j_pmcmod_rien" then
-				card.ability.extra.rienPresent = true
-				card.ability.extra.rienPos = card.ability.extra.currentPosition + 1
-			end
-			
+			card.ability.extra.rienPresent = PMCMOD.pair_linked(card)
 		end
 
 		-- three Receptions after she arrives, Sora reveals her second form
@@ -76,12 +63,12 @@ SMODS.Joker {
 			local priority = nil
 			for i = 1, #G.jokers.cards do
 				local other = G.jokers.cards[i]
-				-- Rien directly to her right: his Edition goes first
+				-- Rien sits directly to her left (she is the apprentice): his Edition goes first
 				if other == card then
-					local right = G.jokers.cards[i + 1]
-					if right and right.config.center.key == "j_pmcmod_rien" and right.edition
-						and not (wearingNegative and right.edition.key == 'e_negative') then
-						priority = right
+					local father = G.jokers.cards[i - 1]
+					if father and father.config.center.key == "j_pmcmod_rien" and father.edition
+						and not (wearingNegative and father.edition.key == 'e_negative') then
+						priority = father
 					end
 				end
 				-- she wears one Negative and never takes a second
@@ -146,11 +133,11 @@ SMODS.Joker {
 			-- The counter rises once per Reception, but she triggers twice for the rest of it.
 			if card.ability.extra.rienPresent and card.ability.extra.doubleReception ~= reception then
 				card.ability.extra.doubleReception = reception
-				if not context.blueprint then card.ability.extra.soraDeathCounter = card.ability.extra.soraDeathCounter + 1 end
+				if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 			end
 			local doubleTrigger = card.ability.extra.doubleReception == reception and 1 or 0
 
-			if card.ability.extra.soraDeathCounter >= 5 then
+			if PMCMOD.pair_triggers(card) >= 5 then
 				card.getting_sliced = true
 				G.E_MANAGER:add_event(Event({func = function()
 					card:start_dissolve({G.C.RED}, nil, 1.6)

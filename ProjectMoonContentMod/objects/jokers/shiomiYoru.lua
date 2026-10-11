@@ -17,7 +17,7 @@ SMODS.Joker {
 		["Pinky"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.renDeathCounter } }
+        return {vars = { PMCMOD.pair_triggers(card) } }
 	end,
 	calculate = function(self, card, context)
 
@@ -30,23 +30,16 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_ren" then
-						card.ability.extra.renPresent = true
-						card.ability.extra.renPos = i
-						break
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.renPresent = PMCMOD.pair_linked(card)
 			
 		end
 
 		if context.individual and context.cardarea == G.play and context.other_card.poise_trigger and card.ability.extra.renPresent then
 					
-			if not context.blueprint then card.ability.extra.renDeathCounter = card.ability.extra.renDeathCounter + 1 end
+			if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 		
-				if card.ability.extra.renDeathCounter >= 5 then
+				if PMCMOD.pair_triggers(card) >= 5 then
 					G.GAME.banned_keys["j_pmcmod_ren"] = true
 					local ren = G.jokers.cards[card.ability.extra.renPos]
                     ren.getting_sliced = true

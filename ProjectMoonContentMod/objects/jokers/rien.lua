@@ -18,7 +18,7 @@ SMODS.Joker {
 		["Index"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.mult, card.ability.extra.soraDeathCounter, card.ability.extra.mult_mod,
+        return {vars = { card.ability.extra.mult, PMCMOD.pair_triggers(card), card.ability.extra.mult_mod,
 			PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.graceXchips, card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
 	end,
 	-- Rien carries the Karmic Consequence; destroying or selling him clears it.
@@ -47,36 +47,13 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_sora" then
-						card.ability.extra.soraPresent = true
-						card.ability.extra.soraPos = i
-					end
-				end
-			end		
-
-
-			-- the driver draws from a shared list, so match the key itself
-			do
-				if PMCMOD.is_prescript_key(context.card.config.center.key) then
-					--print("prescript destroyed")
-					if context.card.prescriptFullfilled then
-						--print("prescript fullfilled")
-						if card.ability.extra.soraPresent then
-							if not context.blueprint then card.ability.extra.mult = card.ability.extra.mult + (card.ability.extra.mult_mod * 2) end
-							if not context.blueprint then card.ability.extra.soraDeathCounter = card.ability.extra.soraDeathCounter + 1 end
-						else
-							if not context.blueprint then card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod end
-						end
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.soraPresent = PMCMOD.pair_linked(card)
 
 
 			
 
-			if card.ability.extra.soraDeathCounter >= 3 and card.ability.extra.soraPresent then
+			if PMCMOD.pair_triggers(card) >= 3 and card.ability.extra.soraPresent then
 
 				for i = 1, #G.jokers.cards do
 					if G.jokers.cards[i] == card then
@@ -92,7 +69,7 @@ SMODS.Joker {
 				end
 				G.GAME.banned_keys["j_pmcmod_sora"] = true
 				local sora = G.jokers.cards[card.ability.extra.soraPos]
-				card.ability.extra.soraDeathCounter = 0
+				PMCMOD.set_pair_trigger(card, 0)
 				sora.getting_sliced = true
 				G.E_MANAGER:add_event(Event({func = function()
 					card:juice_up(0.8, 0.8)

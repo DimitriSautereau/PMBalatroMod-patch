@@ -23,7 +23,7 @@ SMODS.Joker {
 					if SMODS.has_enhancement(playing_card, 'm_pmcmod_burn') then burn_tally = burn_tally + 1 end
 				end
 			end
-        return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, card.ability.extra.kiraDeathCounter } }
+        return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, PMCMOD.pair_triggers(card) } }
 	end,
 	calculate = function(self, card, context)
 		if context.before then
@@ -35,14 +35,8 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_kira" then
-						card.ability.extra.kiraPresent = true
-						card.ability.extra.kiraPos = i
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.kiraPresent = PMCMOD.pair_linked(card)
 			
 		end
 
@@ -61,12 +55,12 @@ SMODS.Joker {
 			if card.ability.extra.dollarsBase * burn_tally <= G.GAME.dollars then
 				context.other_card:set_ability("m_pmcmod_burn", nil, true)
 				if card.ability.extra.kiraPresent then
-					if not context.blueprint then card.ability.extra.kiraDeathCounter = card.ability.extra.kiraDeathCounter + 1 end
+					if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 				else
 					ease_dollars (-card.ability.extra.dollarsBase * burn_tally)
 				end
 
-				if card.ability.extra.kiraDeathCounter >= 5 then
+				if PMCMOD.pair_triggers(card) >= 5 then
 					G.GAME.banned_keys["j_pmcmod_kira"] = true
 					local kira = G.jokers.cards[card.ability.extra.kiraPos]
                     kira.getting_sliced = true

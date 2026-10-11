@@ -18,7 +18,7 @@ SMODS.Joker {
  	},
 	loc_vars = function(self, info_queue, card)
         local new_numerator, new_denominator = SMODS.get_probability_vars(card, card.ability.extra.baseChance, card.ability.extra.maxChance, 'ren')
-        return {vars = { card.ability.extra.renDeathCounter, new_numerator, new_denominator } } 
+        return {vars = { PMCMOD.pair_triggers(card), new_numerator, new_denominator } } 
 	end,
 	calculate = function(self, card, context)
 		if context.before then
@@ -30,14 +30,8 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_shiomiYoru" then
-						card.ability.extra.shiomiPresent = true
-						card.ability.extra.shiomiPos = i
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.shiomiPresent = PMCMOD.pair_linked(card)
 			
 		end
 
@@ -46,7 +40,7 @@ SMODS.Joker {
 			if card.ability.extra.shiomiPresent then
 				context.other_card:set_ability("m_pmcmod_poise", nil, true)
 				gavePoise = true
-				if not context.blueprint then card.ability.extra.renDeathCounter = card.ability.extra.renDeathCounter + 1 end
+				if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 			else
 				if SMODS.pseudorandom_probability(card, 'ren', card.ability.extra.baseChance, card.ability.extra.maxChance, 'ren') then
 					context.other_card:set_ability("m_pmcmod_poise", nil, true)
@@ -54,7 +48,7 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.renDeathCounter >= 5 then
+			if PMCMOD.pair_triggers(card) >= 5 then
 				
 				card.getting_sliced = true
 				G.E_MANAGER:add_event(Event({func = function()

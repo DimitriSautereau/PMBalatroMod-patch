@@ -66,6 +66,72 @@ function PMCMOD.karma()
     return (G.GAME and G.GAME.pmcmod_karma) or 0
 end
 
+-- ---------------------------------------------------------------------------
+-- Nurse father / apprentice pairs
+-- ---------------------------------------------------------------------------
+-- Four pairs, each a father and the apprentice that belongs at his right hand:
+--   {shiomiYoru, ren}  {rien, sora}  {matthias, kira}  {valencina, lucio}
+-- A pair is "linked" only while the apprentice sits EXACTLY to the right of the father. The trigger
+-- count is shared between the two cards (one number per pair, identified by the father's key) rather
+-- than duplicated on each side.
+PMCMOD.PAIRS = {
+    shiomiYoru = 'ren',
+    rien = 'sora',
+    matthias = 'kira',
+    valencina = 'lucio',
+}
+
+function PMCMOD.pair_father_of(key)
+    if not key then return nil end
+    if PMCMOD.PAIRS[key] then return key end
+    for father, apprentice in pairs(PMCMOD.PAIRS) do
+        if apprentice == key then return father end
+    end
+    return nil
+end
+
+function PMCMOD.pair_linked(card)
+    local center = card and card.config and card.config.center
+    local key = center and center.key
+    local father = PMCMOD.pair_father_of(key)
+    if not father then return false end
+    local apprentice = PMCMOD.PAIRS[father]
+    local jokers = (G.jokers and G.jokers.cards) or {}
+
+    for i = 1, #jokers do
+        if jokers[i] == card then
+            if key == father then
+                local right = jokers[i + 1]
+                return (right and right.config.center.key == apprentice) and true or false
+            end
+            local left = jokers[i - 1]
+            return (left and left.config.center.key == father) and true or false
+        end
+    end
+    return false
+end
+
+function PMCMOD.pair_triggers(card)
+    local father = PMCMOD.pair_father_of(card and card.config and card.config.center and card.config.center.key)
+    if not father or not G.GAME then return 0 end
+    G.GAME.pmcmod_pair_triggers = G.GAME.pmcmod_pair_triggers or {}
+    return G.GAME.pmcmod_pair_triggers[father] or 0
+end
+
+function PMCMOD.set_pair_trigger(card, n)
+    local father = PMCMOD.pair_father_of(card and card.config and card.config.center and card.config.center.key)
+    if not father or not G.GAME then return end
+    G.GAME.pmcmod_pair_triggers = G.GAME.pmcmod_pair_triggers or {}
+    G.GAME.pmcmod_pair_triggers[father] = n or 0
+end
+
+function PMCMOD.add_pair_trigger(card, n)
+    local father = PMCMOD.pair_father_of(card and card.config and card.config.center and card.config.center.key)
+    if not father or not G.GAME then return end
+    G.GAME.pmcmod_pair_triggers = G.GAME.pmcmod_pair_triggers or {}
+    G.GAME.pmcmod_pair_triggers[father] = (G.GAME.pmcmod_pair_triggers[father] or 0) + (n or 1)
+end
+
 -- What Sora reads: the City's favour net of its consequences. Negative when Karma outweighs Grace.
 function PMCMOD.sora_grace()
     return PMCMOD.grace() - PMCMOD.karma()

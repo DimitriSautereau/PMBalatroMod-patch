@@ -18,7 +18,7 @@ SMODS.Joker {
 		["Thumb"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.lucioDeathCounter } }
+        return {vars = { PMCMOD.pair_triggers(card) } }
 	end,
 	calculate = function(self, card, context)
 
@@ -31,15 +31,8 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_lucio" then
-						card.ability.extra.lucioPresent = true
-						card.ability.extra.lucioPos = i
-						break
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.lucioPresent = PMCMOD.pair_linked(card)
 			
 		end
 
@@ -50,9 +43,9 @@ SMODS.Joker {
 		if context.individual and context.cardarea == G.play and (context.other_card == context.scoring_hand[#context.scoring_hand]) and #context.scoring_hand > 2 and card.ability.extra.lucioPresent then
 			context.other_card:set_ability("m_pmcmod_tremor", nil, true)
 
-			if not context.blueprint then card.ability.extra.lucioDeathCounter = card.ability.extra.lucioDeathCounter + 1 end
+			if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 
-			if card.ability.extra.lucioDeathCounter >= 5 then
+			if PMCMOD.pair_triggers(card) >= 5 then
 				G.GAME.banned_keys["j_pmcmod_lucio"] = true
 				local lucio = G.jokers.cards[card.ability.extra.lucioPos]
 				lucio.getting_sliced = true

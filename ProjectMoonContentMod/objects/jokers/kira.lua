@@ -17,7 +17,7 @@ SMODS.Joker {
 		["Middle"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.kiraDeathCounter, card.ability.extra.dollars, card.ability.extra.dollars * 2} }
+        return {vars = { PMCMOD.pair_triggers(card), card.ability.extra.dollars, card.ability.extra.dollars * 2} }
 	end,
 	calculate = function(self, card, context)
 		if context.before then
@@ -29,15 +29,8 @@ SMODS.Joker {
 				end
 			end
 
-			if card.ability.extra.currentPosition <= #G.jokers.cards then
-				for i = card.ability.extra.currentPosition, #G.jokers.cards do
-					if G.jokers.cards[i].config.center.key == "j_pmcmod_matthias" then
-						card.ability.extra.matthiasPresent = true
-						card.ability.extra.matthiasPos = i
-						break
-					end
-				end
-			end
+			-- only the partner exactly on the correct side counts
+			card.ability.extra.matthiasPresent = PMCMOD.pair_linked(card)
 			
 		end
 
@@ -45,7 +38,7 @@ SMODS.Joker {
 			local multiplier = 1
 			if card.ability.extra.matthiasPresent then
 				multiplier = 2
-				if not context.blueprint then card.ability.extra.kiraDeathCounter = card.ability.extra.kiraDeathCounter + 1 end
+				if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
 			end
 			return {
 				dollars = card.ability.extra.dollars * multiplier,
@@ -53,7 +46,7 @@ SMODS.Joker {
         end
 
 		if context.after then
-			if card.ability.extra.kiraDeathCounter >= 3 then
+			if PMCMOD.pair_triggers(card) >= 3 then
                     card.getting_sliced = true
                     G.E_MANAGER:add_event(Event({func = function()
                         card:start_dissolve({G.C.RED}, nil, 1.6)

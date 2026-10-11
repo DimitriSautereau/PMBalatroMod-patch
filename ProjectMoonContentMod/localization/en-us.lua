@@ -2045,7 +2045,7 @@ return {
                 name = 'Lucio',
                 text = {
                     {"Scored Tremor cards give {C:gold}$#2#{}"},
-                    {"{C:attention}Bonus effect: {}If Valencina is present and to the right,",
+                    {"{C:attention}Bonus effect: {}If Valencina is exactly to the left,",
                     "Tremor cards now give {C:gold}$#3#{}",
                     "Lucio dies after triggering 3 Tremor cards",
                     "{C:inactive}(Total triggers: {C:red}#1#{C:inactive})"},
@@ -2067,7 +2067,7 @@ return {
                     "multiplies all three channels by {C:attention}1 + 0.1{} of it:"},
                     {"{C:chips}+#1#{} Chips, {C:mult}+#6#{} Mult and {X:mult,C:white}X#7#{} Mult",
                     "{C:inactive}(net Grace #9#)"},
-                    {"With {C:attention}Rien exactly to her right{} she takes his Edition first",
+                    {"With {C:attention}Rien exactly to her left{} she takes his Edition first",
                     "and triggers twice for the rest of that Reception; she dies after {C:attention}5{}",
                     "{C:inactive}Absorbed {C:mult}+#6#{} {X:mult,C:white}X#7#{} {C:chips}+#1#{} {C:blue}#8#{} charge stacks",
                     "{C:inactive}Grace {C:blue}#4#{}  Karma {C:red}#5#{}  Triggers #3#{}"},
@@ -2080,7 +2080,7 @@ return {
                 name = 'Kira',
                 text = {
                     {"Burn Card gives {C:gold}$#2#{}"},
-                    {"{C:attention}Bonus effect: {}If Matthias is present and to the right,",
+                    {"{C:attention}Bonus effect: {}If Matthias is exactly to the left,",
                     "Burn Cards will now give {C:gold}$#3#{}",
                     "Kira dies after triggering 5 Burn Cards",
                     "{C:inactive}(Total triggers: {C:red}#1#{C:inactive})"},
@@ -2109,7 +2109,7 @@ return {
                 name = 'Ren',
                 text = {
                     {"Has a {C:green}#2# in #3#{} chance to give Poise to scored cards"},
-                    {"{C:attention}Bonus effect: {}If Shiomi Yoru is present and to the right,",
+                    {"{C:attention}Bonus effect: {}If Shiomi Yoru is exactly to the left,",
                     "chance becomes guaranteed",
                     "Ren dies after triggering this effect 5 times",
                     "{C:inactive}(Total triggers: {C:red}#1#{C:inactive})"},

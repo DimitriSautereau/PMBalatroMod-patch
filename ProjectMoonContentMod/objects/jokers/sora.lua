@@ -34,8 +34,16 @@ SMODS.Joker {
 
 
 
-        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, PMCMOD.pair_trigger_display(card),
-            PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.chargeStacks, PMCMOD.sora_grace() } }
+		-- the stats as the player will actually get them, i.e. after the net-Grace factor, plus how
+		-- many times her keypage triggers this hand
+		local ex = card.ability.extra
+		local factor = ex.locked and (1 + 0.1 * PMCMOD.sora_grace()) or 1
+		local here = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
+		local triggersNow = 1 + (((ex.doubleReception == here) and 1) or 0) + (ex.chargeTriggers or 0)
+
+        return {vars = { ex.chips, ex.chips_mod, PMCMOD.pair_trigger_display(card),
+            PMCMOD.grace(), PMCMOD.karma(), ex.mult, ex.xmult, ex.chargeStacks, PMCMOD.sora_grace(),
+            ex.chips * factor, ex.mult * factor, ex.xmult * factor, triggersNow } }
 	end,
 	-- taken once and never offered again
 	add_to_deck = function(self, card, from_debuff)
@@ -125,6 +133,11 @@ SMODS.Joker {
 			-- 5 Charge buys her own keypage another trigger, once per hand. This used to sit in
 			-- context.repetition - the card-retrigger context - which is why she retriggered played
 			-- cards. Per stack her keypage triggers once more, for the same single spend.
+			if context.joker_main and not context.blueprint then
+				-- starts fresh every hand: only a spend made in this hand counts
+				card.ability.extra.chargeTriggers = 0
+			end
+
 			if context.joker_main and not context.blueprint and PMCMOD.get_charge() >= 5
 				and card.ability.extra.chargeSpendHand ~= handKey then
 				card.ability.extra.chargeSpendHand = handKey

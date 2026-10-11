@@ -2070,6 +2070,8 @@ return {
                     {"With {C:attention}Rien exactly to her left{} she takes his Edition first",
                     "and triggers twice for the rest of that Reception; she dies after {C:attention}5{}",
                     "{C:inactive}Absorbed {C:mult}+#6#{} {X:mult,C:white}X#7#{} {C:chips}+#1#{} {C:blue}#8#{} charge stacks",
+                    {"{C:inactive}Now: {C:chips}+#10#{} Chips, {C:mult}+#11#{} Mult, {X:mult,C:white}X#12#{} Mult",
+                    "{C:inactive}Triggers this hand: {C:attention}#13#{}"},
                     "{C:inactive}Grace {C:blue}#4#{}  Karma {C:red}#5#{}  Triggers #3#{}"},
                 },
                 unlock = {

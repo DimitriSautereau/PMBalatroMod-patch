@@ -37,7 +37,9 @@ SMODS.Joker {
 		-- the stats as the player will actually get them, i.e. after the net-Grace factor, plus how
 		-- many times her keypage triggers this hand
 		local ex = card.ability.extra
-		local factor = ex.locked and (1 + 0.1 * PMCMOD.sora_grace()) or 1
+		local sgv = PMCMOD.sora_grace()
+		local factor = ex.locked and (1 + 0.1 * sgv) or 1
+		local xmNow = ex.locked and (ex.xmult ^ (1 + 0.5 * sgv)) or ex.xmult
 		local here = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
 		local triggersNow = 1 + (((ex.doubleReception == here) and 1) or 0) + (ex.chargeTriggers or 0)
 
@@ -48,7 +50,7 @@ SMODS.Joker {
             PMCMOD.grace(),                       -- #4#
             PMCMOD.karma(),                       -- #5#
             ex.mult * factor,                     -- #6# Mult, after the factor
-            ex.xmult * factor,                    -- #7# XMult, after the factor
+            xmNow,                                -- #7# XMult, after the net-Grace power
             ex.chargeStacks,                      -- #8#
             PMCMOD.sora_grace(),                  -- #9#
         } }
@@ -189,7 +191,8 @@ SMODS.Joker {
 				local factor = 1 + 0.1 * sg
 				ret.chips = ex.chips * factor * triggers
 				ret.mult = ex.mult * factor * triggers
-				local xm = ex.xmult * factor
+				-- XMult is a power of the absorbed value rather than a factor of it
+				local xm = ex.xmult ^ (1 + 0.5 * sg)
 				if xm > 0 then ret.xmult = xm ^ triggers end
 			else
 				ret.chips = ex.chips * triggers

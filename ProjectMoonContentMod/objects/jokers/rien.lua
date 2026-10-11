@@ -3,7 +3,7 @@ SMODS.Joker {
 	no_pool_flag = 'rien_extinct',
 	name = "Rien",
 	pronouns = "he_him",
-	config = { extra = { mult = 0, mult_mod = 15,  graceXchips = 1.2, karmaXmult = 0.9, karmaChips = 10, prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0, soraPresent = false, soraPos = nil, soraDeathCounter = 0, allowPrescriptCheck = false } },
+	config = { extra = { mult = 0, mult_mod = 15,  graceXchips = 0.2, karmaXmult = 0.9, karmaChips = 50, prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0, soraPresent = false, soraPos = nil, soraDeathCounter = 0, allowPrescriptCheck = false } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,

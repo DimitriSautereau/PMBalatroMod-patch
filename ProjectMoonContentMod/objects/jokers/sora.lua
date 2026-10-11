@@ -201,13 +201,13 @@ SMODS.Joker {
 				-- each channel on top of what she absorbed
 				local sg = PMCMOD.sora_grace()
 				local factor = 1 + 0.1 * sg
-				ret.chips = ex.chips * multiplier * factor
+				ret.chips = ex.chips * factor
 				ret.mult = ex.mult * factor
 				-- XMult is a power of the absorbed value rather than a factor of it
 				local xm = ex.xmult ^ (1 + 0.5 * sg)
 				if xm > 0 then ret.xmult = xm end
 			else
-				ret.chips = ex.chips * multiplier
+				ret.chips = ex.chips
 				if ex.mult > 0 then ret.mult = ex.mult end
 				if ex.xmult ~= 1 then ret.xmult = ex.xmult end
 			end

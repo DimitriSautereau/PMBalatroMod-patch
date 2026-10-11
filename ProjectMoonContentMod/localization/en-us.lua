@@ -333,7 +333,7 @@ return {
                 name = 'Esther',
                 text = {
                     "When a {C:attention}Singleton{} card scores,",
-                    "it gives {X:chips,C:white}X#1#{} Chips {C:inactive}(1 + 0.2 Grace)",
+                    "it gives {X:chips,C:white}X#1#{} Chips {C:inactive}(1 + 0.1 per Karma less Grace)",
                     "{C:inactive}+1 hand size once Grace less Karma reaches 5{}",
                 },
                 unlock = {

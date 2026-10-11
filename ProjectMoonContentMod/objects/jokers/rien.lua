@@ -1,5 +1,6 @@
 SMODS.Joker {
 	key = 'rien',
+	no_pool_flag = 'rien_extinct',
 	name = "Rien",
 	pronouns = "he_him",
 	config = { extra = { mult = 0, mult_mod = 15,  graceXchips = 1.2, karmaXmult = 0.9, karmaChips = 10, prescriptListShuffled = {}, prescriptActive = false, currentPrescript = 0, soraPresent = false, soraPos = nil, soraDeathCounter = 0, allowPrescriptCheck = false } },
@@ -24,8 +25,10 @@ SMODS.Joker {
 	remove_from_deck = function(self, card, from_debuff)
 		if not from_debuff and G.GAME then G.GAME.pmcmod_karma = 0 end
 	end,
+	-- taken once and never offered again
 	add_to_deck = function(self, card, from_debuff)
-		
+		if G.GAME then G.GAME.pool_flags.rien_extinct = true end
+
 		-- Shuffles prescripts
         local prescriptListUnshuffled = {"j_pmcmod_prescript1", "j_pmcmod_prescript2", "j_pmcmod_prescript3", "j_pmcmod_prescript4", "j_pmcmod_prescript5", "j_pmcmod_prescript6", "j_pmcmod_prescript7", "j_pmcmod_prescript8", "j_pmcmod_prescript9", "j_pmcmod_prescript10", "j_pmcmod_prescript11"}
 		card.ability.extra.prescriptListShuffled = Shuffle(prescriptListUnshuffled, 'pmcmod_rien_prescripts')
@@ -100,6 +103,21 @@ SMODS.Joker {
 
 		end
 
+
+		if context.setting_blind and not context.blueprint and not card.edition then
+			-- Sora exactly to his right: the Index hands him a random Edition
+			for i = 1, #G.jokers.cards do
+				if G.jokers.cards[i] == card then
+					local right = G.jokers.cards[i + 1]
+					if right and right.config.center.key == "j_pmcmod_sora" then
+						local edition = SMODS.poll_object({ type = 'Edition', guaranteed = true,
+							seed = 'pmcmod_rien_edition' .. (G.GAME.round_resets.ante or 0) .. (G.GAME.round or 0) })
+						if edition then card:set_edition(edition, true) end
+					end
+					break
+				end
+			end
+		end
 
 		if context.joker_main then
 			-- Grace of the City pays out, Karmic Consequence takes its cut.

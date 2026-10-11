@@ -181,17 +181,19 @@ function PMCMOD.prescript_driver()
     if not PMCMOD.index_member_in_play() then return end
     if PMCMOD.prescript_in_play() then return end
 
-    G.GAME.pmcmod_prescript_list = G.GAME.pmcmod_prescript_list
-        or Shuffle({
-            "j_pmcmod_prescript1", "j_pmcmod_prescript2", "j_pmcmod_prescript3",
-            "j_pmcmod_prescript4", "j_pmcmod_prescript5", "j_pmcmod_prescript6",
-            "j_pmcmod_prescript7", "j_pmcmod_prescript8", "j_pmcmod_prescript9",
-            "j_pmcmod_prescript10", "j_pmcmod_prescript11",
-        }, 'pmcmod_prescripts')
-    G.GAME.pmcmod_prescript_index = ((G.GAME.pmcmod_prescript_index or 0) % #G.GAME.pmcmod_prescript_list) + 1
+    -- A fresh draw each time. This used a Shuffle with the fixed seed 'pmcmod_prescripts', so
+    -- every run issued exactly the same order; the seed now mixes in the Scene and a spawn counter.
+    local list = {
+        "j_pmcmod_prescript1", "j_pmcmod_prescript2", "j_pmcmod_prescript3",
+        "j_pmcmod_prescript4", "j_pmcmod_prescript5", "j_pmcmod_prescript6",
+        "j_pmcmod_prescript7", "j_pmcmod_prescript8", "j_pmcmod_prescript9",
+        "j_pmcmod_prescript10", "j_pmcmod_prescript11",
+    }
+    G.GAME.pmcmod_prescript_count = (G.GAME.pmcmod_prescript_count or 0) + 1
+    local seed = 'pmcmod_prescript_' .. (rr.ante or 0) .. '_' .. (G.GAME.round or 0) .. '_' .. G.GAME.pmcmod_prescript_count
 
     local spawned = SMODS.add_card({
-        key = G.GAME.pmcmod_prescript_list[G.GAME.pmcmod_prescript_index],
+        key = pseudorandom_element(list, seed),
         stickers = { "eternal" },
         force_stickers = true,
     })

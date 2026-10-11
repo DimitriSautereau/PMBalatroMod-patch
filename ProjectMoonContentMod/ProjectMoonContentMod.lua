@@ -81,7 +81,14 @@ PMCMOD.PAIRS = {
     valencina = 'lucio',
 }
 
+-- SMODS card keys carry the j_pmcmod_ prefix; PMCMOD.PAIRS is written with bare names.
+function PMCMOD.bare_key(key)
+    if type(key) ~= 'string' then return nil end
+    return (key:gsub('^j_pmcmod_', ''))
+end
+
 function PMCMOD.pair_father_of(key)
+    key = PMCMOD.bare_key(key)
     if not key then return nil end
     if PMCMOD.PAIRS[key] then return key end
     for father, apprentice in pairs(PMCMOD.PAIRS) do
@@ -92,7 +99,7 @@ end
 
 function PMCMOD.pair_linked(card)
     local center = card and card.config and card.config.center
-    local key = center and center.key
+    local key = PMCMOD.bare_key(center and center.key)
     local father = PMCMOD.pair_father_of(key)
     if not father then return false end
     local apprentice = PMCMOD.PAIRS[father]
@@ -102,10 +109,10 @@ function PMCMOD.pair_linked(card)
         if jokers[i] == card then
             if key == father then
                 local right = jokers[i + 1]
-                return (right and right.config.center.key == apprentice) and true or false
+                return (right and PMCMOD.bare_key(right.config.center.key) == apprentice) and true or false
             end
             local left = jokers[i - 1]
-            return (left and left.config.center.key == father) and true or false
+            return (left and PMCMOD.bare_key(left.config.center.key) == father) and true or false
         end
     end
     return false

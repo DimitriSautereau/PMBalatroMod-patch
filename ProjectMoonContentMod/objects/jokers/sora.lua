@@ -39,17 +39,18 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 
 		if context.before then
-			-- Rien has to be exactly to her right
+			-- Rien has to be exactly to her left (she is the apprentice)
 			card.ability.extra.rienPresent = PMCMOD.pair_linked(card)
 		end
 
-		-- three Receptions after she arrives, Sora reveals her second form
+		-- three Receptions WITHOUT stealing and she reveals her second form. A fresh field, so a
+		-- leftover value in the old `counter` cannot trip it early.
 		if not card.ability.extra.locked and not context.blueprint then
 			local reception = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
 			if card.ability.extra.lastReception ~= reception then
 				card.ability.extra.lastReception = reception
-				card.ability.extra.counter = card.ability.extra.counter + 1
-				if card.ability.extra.counter >= 3 then
+				card.ability.extra.dryReceptions = (card.ability.extra.dryReceptions or 0) + 1
+				if card.ability.extra.dryReceptions >= 3 then
 					card.ability.extra.locked = true
 				end
 			end
@@ -79,6 +80,7 @@ SMODS.Joker {
 			end
 
 			if priority or #editionJokers > 0 then
+				card.ability.extra.dryReceptions = 0   -- a steal restarts the three-Reception count
 				local eligible_card = priority or pseudorandom_element(editionJokers, 'sora')
 				local stolen = eligible_card.edition.key
 				eligible_card:set_edition()          -- it always leaves its owner

@@ -2004,10 +2004,11 @@ return {
                 text = {
                     {"{C:blue}-#1#{} Hand.  {C:attention}Laevateinn: #2#{} counters left",
                     "{C:inactive}(Burn Cards are {C:attention}x#4#{} stronger now){}"},
-                    {"First hand scoring {C:attention}under 4{} cards: buy {C:red}Burn{} for each",
-                    "unburnt card at {C:gold}$#3#{}, the price rising {C:gold}$1{} each purchase"},
-                    {"{C:inactive}Broke:{} destroy the unburnt card for {C:gold}$20{}; {C:attention}4+{} cards instead",
-                    "takes a random {C:attention}non-Eternal{} Keypage {C:inactive}(each once per run){}"},
+                    {"First hand scoring {C:attention}under 4{} cards: each unburnt card",
+                    "gains {C:red}Burn{} free; the price climbs {C:gold}$1{} a time from {C:gold}$#3#{}"},
+                    {"{C:inactive}Once the price outruns your purse:{} destroy the unburnt card for",
+                    "{C:gold}$20{}, or a random {C:attention}non-Eternal{} Keypage if 4+ cards scored",
+                    "{C:inactive}(once per hand, and it takes a counter each time){}"},
                     {"{C:inactive}Broke at the last counter takes {C:attention}Kira{} and bans her.",
                     "{C:inactive}At none, every scored card rolls {C:attention}1 in 5{} for Burn,",
                     "{C:inactive}destroying it if it already burns{}"},
@@ -2087,9 +2088,7 @@ return {
                 name = 'Kira',
                 text = {
                     {"Burn Card gives {C:gold}$#2#{}"},
-                    {"{C:attention}Bonus effect: {}If Matthias is exactly to the left,",
-                    "Burn Cards will now give {C:gold}$#3#{}",
-                    "Kira dies after triggering 5 Burn Cards",
+                    {"Kira dies after triggering {C:attention}3{} Burn Cards",
                     "{C:inactive}(Total triggers: {C:red}#1#{C:inactive})"},
                 },
                 unlock = {

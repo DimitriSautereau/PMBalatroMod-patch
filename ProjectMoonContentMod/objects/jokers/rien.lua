@@ -43,7 +43,6 @@ SMODS.Joker {
 		if context.joker_type_destroyed then
 
 
-			card.ability.extra.soraPresent = false
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
 					card.ability.extra.currentPosition = i

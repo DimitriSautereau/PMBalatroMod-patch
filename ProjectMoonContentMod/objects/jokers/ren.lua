@@ -26,7 +26,6 @@ SMODS.Joker {
 			card.ability.extra.shiomiPresent = PMCMOD.pair_linked(card)
 		end
 		if context.before then
-			card.ability.extra.shiomiPresent = false
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
 					card.ability.extra.currentPosition = i

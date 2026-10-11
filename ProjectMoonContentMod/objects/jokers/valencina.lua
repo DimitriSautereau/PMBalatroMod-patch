@@ -27,7 +27,6 @@ SMODS.Joker {
 		end
 
 		if context.before then
-			card.ability.extra.lucioPresent = false
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
 					card.ability.extra.currentPosition = i

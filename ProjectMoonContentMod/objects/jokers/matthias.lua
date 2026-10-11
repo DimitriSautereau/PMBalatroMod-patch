@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'matthias',
 	name = "Matthias",
 	pronouns = "he_him",
-	config = { extra = { hands = 1, laevateinn = 3, price = 2, brokeOnce = false, keypageOnce = false,
+	config = { extra = { hands = 1, laevateinn = 3, price = 2, brokeHand = -1, keypageHand = -1,
 		kiraPresent = false, currentPosition = 1 } },
 	unlocked = true,
 	eternal_compat = true,
@@ -56,16 +56,20 @@ SMODS.Joker {
 			and not SMODS.has_enhancement(context.other_card, 'm_pmcmod_burn') then
 			local scored = context.scoring_hand or {}
 
+			local rr = G.GAME.round_resets or {}
+			local handKey = (rr.ante or 0) * 10000 + (G.GAME.round or 0) * 100
+				+ (((G.GAME.current_round or {}).hands_played) or 0)
+
 			if #scored < 4 then
-				-- a short first hand: buy Burn for this card at the going price
+				-- a short first hand: Burn is given free, but the price still climbs, and once it
+				-- outruns the purse the seal starts destroying instead
 				if ex.price <= G.GAME.dollars then
 					context.other_card:set_ability('m_pmcmod_burn', nil, true)
-					ease_dollars(-ex.price)
 					ex.price = ex.price + 1
-				elseif not ex.brokeOnce then
+				elseif ex.brokeHand ~= handKey then
 					-- Broke. At the last counter the seal takes Kira and bans her from the pool;
 					-- otherwise it takes the unburnt card itself.
-					ex.brokeOnce = true
+					ex.brokeHand = handKey
 					ex.laevateinn = ex.laevateinn - 1
 					local kira = nil
 					local jokers = G.jokers.cards or {}
@@ -87,9 +91,9 @@ SMODS.Joker {
 						message = localize('pmcmod_laevateinnSpent'), colour = G.C.RED,
 					})
 				end
-			elseif not ex.keypageOnce then
-				-- a long first hand: the Laevateinn takes a Keypage instead, once per run
-				ex.keypageOnce = true
+			elseif ex.keypageHand ~= handKey then
+				-- a long first hand: the Laevateinn takes a Keypage instead
+				ex.keypageHand = handKey
 				local pool = {}
 				local jokers = G.jokers.cards or {}
 				for i = 1, #jokers do

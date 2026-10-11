@@ -25,7 +25,6 @@ SMODS.Joker {
 			card.ability.extra.matthiasPresent = PMCMOD.pair_linked(card)
 		end
 		if context.before then
-			card.ability.extra.matthiasPresent = false
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
 					card.ability.extra.currentPosition = i
@@ -38,13 +37,12 @@ SMODS.Joker {
 		end
 
 		if context.individual and context.cardarea == G.play and SMODS.has_enhancement(context.other_card, 'm_pmcmod_burn') then
-			local multiplier = 1
-			if card.ability.extra.matthiasPresent then
-				multiplier = 2
-				if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
+			-- the adjacency still counts for her trigger total, even though the payout is flat
+			if card.ability.extra.matthiasPresent and not context.blueprint then
+				PMCMOD.add_pair_trigger(card, 1)
 			end
 			return {
-				dollars = card.ability.extra.dollars * multiplier,
+				dollars = card.ability.extra.dollars,
 			}
         end
 

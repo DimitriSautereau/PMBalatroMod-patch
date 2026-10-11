@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'gloria',
 	name = "Gloria",
 	pronouns = "she_her",
-	config = { extra = { dollars = 7 } },
+	config = { extra = { graceDollars = 0.2, handGranted = false } },
 	unlocked = false,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -18,10 +18,17 @@ SMODS.Joker {
  	},
 	loc_vars = function (self, info_queue, card)
 		info_queue[#info_queue+1] = {set = "Other", key = "effect_singleton"}
-    	return {vars = { card.ability.extra.dollars , PMCMOD.grace(), PMCMOD.karma() }}
+    	return {vars = { math.max(0, math.floor(1 + card.ability.extra.graceDollars * PMCMOD.sora_grace())), PMCMOD.grace(), PMCMOD.karma(), PMCMOD.sora_grace() }}
 	end,
 	calculate = function(self, card, context)
 		
+		-- +1 hand size the first time the City's favour reaches 5
+		if context.setting_blind and not context.blueprint and not card.ability.extra.handGranted
+			and PMCMOD.sora_grace() >= 5 and G.hand then
+			card.ability.extra.handGranted = true
+			G.hand:change_size(1)
+		end
+
 		if context.individual and context.cardarea == G.play and not context.blueprint then
 			local singletonCounter = 0
 			local singletonSuit = context.other_card.base.suit
@@ -38,16 +45,17 @@ SMODS.Joker {
 			end
 
 			if singletonCounter == 1 then
-				return {
-					dollars = card.ability.extra.dollars,
-				}
+				local d = math.max(0, math.floor(1 + card.ability.extra.graceDollars * PMCMOD.sora_grace()))
+				if d > 0 then
+					return { dollars = d }
+				end
 			end
 		end
 		
 	end,
 	-- Grace of the City makes Index Keypages more likely (x2 each, capped by PMCMOD.bonus_weight).
 	get_weight = function(self, weight)
-		return PMCMOD.index_weight(weight)
+		return PMCMOD.index_weight(weight, self and self.key)
 	end,
 	set_badges = function(self, card, badges)
  		badges[#badges+1] = create_badge(localize('pmcmod_badge_index'), HEX('e0e0e0'), HEX('59a5e3'), 1.2 )

@@ -333,7 +333,8 @@ return {
                 name = 'Esther',
                 text = {
                     "When a {C:attention}Singleton{} card scores,",
-                    "it gives {X:chips,C:white}X#1#{} Chips",
+                    "it gives {X:chips,C:white}X#1#{} Chips {C:inactive}(1 + 0.2 Grace)",
+                    "{C:inactive}+1 hand size once Grace less Karma reaches 5{}",
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Esther Keypage{}',
@@ -344,7 +345,8 @@ return {
                 name = 'Gloria',
                 text = {
                     "When a {C:attention}Singleton{} card scores,",
-                    "it gives {C:gold}$#1#{}",
+                    "it gives {C:gold}$#1#{} {C:inactive}(1 + 0.2 Grace)",
+                    "{C:inactive}+1 hand size once Grace less Karma reaches 5{}",
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Gloria Keypage{}',
@@ -355,7 +357,9 @@ return {
                 name = 'Hubert',
                 text = {
                     "When a {C:attention}Singleton{} card scores,",
-                    "retrigger it once",
+                    "retrigger it once at {C:green}#1# in #2#{} odds",
+                    "{C:inactive}(1.2 to the power of Grace less Karma, and",
+                    "{C:inactive}+1 hand size once that reaches 5){}",
                 },
                 unlock = {
                     'Win a run with {C:attention}Aspect of Hubert Keypage{}',

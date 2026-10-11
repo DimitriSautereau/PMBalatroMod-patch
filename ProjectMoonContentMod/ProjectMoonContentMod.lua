@@ -268,8 +268,10 @@ function PMCMOD.grant_karma()
     if PMCMOD.voice_of_the_city_in_play() then ease_dollars(-G.GAME.dollars, true) end
 end
 
--- Grace makes Index Keypages more likely: x2 each, capped by PMCMOD.bonus_weight like everything else.
-function PMCMOD.index_weight(weight)
+-- Grace makes Index Keypages more likely: x2 each, capped by PMCMOD.bonus_weight like everything
+-- else. Aspects (_alt) are their own cards and get no bonus - they are not Index members.
+function PMCMOD.index_weight(weight, key)
+    if PMCMOD.is_aspect(key) then return weight end
     return PMCMOD.bonus_weight(weight, PMCMOD.grace())
 end
 

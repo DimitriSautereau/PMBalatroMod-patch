@@ -2806,13 +2806,10 @@ return {
             pmcmod_sinwrath_seal = {
                 name = "Wrath",
                 text = {
-                    "When scored, gains one of:",
-                    "{C:chips}+0-8 Perma Chips{}, {C:mult}+0-4 Perma Mult{}",
-                    "or {C:gold}+1 Perma Money{}",
-                    "{C:inactive}(+2 Chips and +1 Mult per Sloth seal){}",
-                    "1 in 10 on scored {C:attention}Burn{} cards",
-                    "{C:inactive}Scored: 1.2 per Sloth seal in 10 to become{}",
-                    "{C:inactive}Burn, and in 20 to spread the seal{}"
+                    "When scored, {C:green}1.2 per Sloth seal in 10{} to",
+                    "become a {C:red}Burn{} Card, and in {C:green}20{} to",
+                    "spread {C:red}Burn{} to a card that lacks it",
+                    "{C:inactive}(Sloth seals feed both rolls){}"
                 },
             },
             pmcmod_sinpride_seal = {

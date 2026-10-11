@@ -306,6 +306,67 @@ function PMCMOD.prescript_driver()
     PMCMOD.claim_slot(spawned)
 end
 
+-- ---------------------------------------------------------------------------
+-- Index Keypages lost to a prescript
+-- ---------------------------------------------------------------------------
+-- prescript2 picks a Keypage and asks for it to be sold (its `selectedJoker`). If that card is an
+-- Index member, it is queued here and re-issued at the next shop with a random Edition.
+--
+-- The absorbed values survive; only volatile state is dropped, so Sora comes back in her first form
+-- with everything she stole still on her.
+PMCMOD.INDEX_RETURN_VOLATILE = {
+    'locked', 'dryReceptions', 'lastReception', 'doubleReception',
+    'chargeHand', 'chargeSpendHand', 'chargeTriggers', 'currentPosition', 'pairCount',
+}
+
+function PMCMOD.queue_index_return(sold)
+    if not (sold and sold.config and sold.config.center) then return end
+    local center = sold.config.center
+    if not (center.pools and center.pools.Index) then return end
+    local key = center.key
+
+    -- was this exact Keypage demanded by a prescript on the board?
+    local demanded = false
+    local jokers = (G.jokers and G.jokers.cards) or {}
+    for i = 1, #jokers do
+        local extra = jokers[i].ability and jokers[i].ability.extra
+        if extra and extra.selectedJoker == key then
+            demanded = true
+            break
+        end
+    end
+    if not demanded then return end
+
+    local keep = {}
+    for k, v in pairs(sold.ability.extra or {}) do keep[k] = v end
+    for _, k in ipairs(PMCMOD.INDEX_RETURN_VOLATILE) do keep[k] = nil end
+
+    G.GAME.pmcmod_index_return = G.GAME.pmcmod_index_return or {}
+    G.GAME.pmcmod_index_return[#G.GAME.pmcmod_index_return + 1] = { key = key, stats = keep }
+end
+
+function PMCMOD.index_return_tick()
+    local queued = G.GAME and G.GAME.pmcmod_index_return
+    if not queued or #queued == 0 then return end
+    local rr = G.GAME.round_resets or {}
+    local shopKey = (rr.ante or 0) * 10000 + (G.GAME.round or 0)
+    if G.GAME.pmcmod_index_return_shopKey == shopKey then return end
+    G.GAME.pmcmod_index_return_shopKey = shopKey
+
+    for _, entry in ipairs(queued) do
+        local edition = SMODS.poll_object({
+            type = 'Edition', guaranteed = true,
+            seed = 'pmcmod_index_return' .. shopKey .. tostring(entry.key),
+        })
+        local added = SMODS.add_card({ key = entry.key, edition = edition })
+        PMCMOD.claim_slot(added)
+        if added and added.ability and added.ability.extra then
+            for k, v in pairs(entry.stats or {}) do added.ability.extra[k] = v end
+        end
+    end
+    G.GAME.pmcmod_index_return = {}
+end
+
 -- Rudolph's four effects are all "while Rudolph is on the team", so they need to be visible to
 -- events that happen outside his own calculate: other cards triggering, and anything being sold.
 function PMCMOD.rudolph_in_play()
@@ -331,6 +392,8 @@ function PMCMOD.install_sell_reporter()
         if value > 0 and PMCMOD.rudolph_in_play() then
             PMCMOD.add_charge(value)
         end
+        -- a prescript-demanded Index Keypage comes back next shop
+        PMCMOD.queue_index_return(sold)
     end
 end
 
@@ -451,6 +514,9 @@ function PMCMOD.install_trigger_reporter()
         -- ending_shop without needing a specific Keypage on the team
         if context and context.setting_blind then
             PMCMOD.prescript_driver()
+        end
+        if context and context.ending_shop then
+            PMCMOD.index_return_tick()
         end
         -- a prescript whose outcome is already known is destroyed right away
         if context and not context.blueprint and self.ability and self.ability.set == 'Joker'

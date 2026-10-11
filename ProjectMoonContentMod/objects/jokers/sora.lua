@@ -130,6 +130,10 @@ SMODS.Joker {
 				card.ability.extra.chargeSpendHand = handKey
 				PMCMOD.add_charge(-5)
 				card.ability.extra.chargeTriggers = card.ability.extra.chargeStacks
+				card_eval_status_text(card, 'extra', nil, nil, nil, {
+					message = localize('pmcmod_chargeSpend'),
+					colour = G.C.BLUE,
+				})
 			end
 		end
 

@@ -221,6 +221,14 @@ end
 
 -- The moment a prescript's outcome is known - fulfilled, or blown - it is destroyed. The other exit
 -- is the end of its third Scene, which the page's own end_of_round branch handles.
+-- Announces how a prescript ended, where it dissolves.
+function PMCMOD.prescript_verdict(card, fulfilled)
+    card_eval_status_text(card, 'extra', nil, nil, nil, {
+        message = localize(fulfilled and 'pmcmod_prescriptFulfilled' or 'pmcmod_prescriptFailed'),
+        colour = fulfilled and G.C.BLUE or G.C.RED,
+    })
+end
+
 function PMCMOD.resolve_prescript(card)
     if not (card and card.ability and card.ability.extra) then return end
     local ex = card.ability.extra
@@ -234,6 +242,7 @@ function PMCMOD.resolve_prescript(card)
     if n and G.GAME.pool_flags then G.GAME.pool_flags['prescript' .. n .. 'Extinct'] = true end
 
     if fulfilled then PMCMOD.grant_grace() else PMCMOD.grant_karma() end
+    PMCMOD.prescript_verdict(card, fulfilled)
 
     if not card.getting_sliced then
         card.getting_sliced = true

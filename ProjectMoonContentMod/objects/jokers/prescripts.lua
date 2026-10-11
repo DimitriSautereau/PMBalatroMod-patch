@@ -91,9 +91,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -196,8 +198,10 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 					card.prescriptFullfilled = false
 				end
 		end
@@ -300,10 +304,12 @@ SMODS.Joker {
 
 				if card.ability.extra.prescriptFailed == true then
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 					card.prescriptFullfilled = false
 				else
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				end
 		end
 		
@@ -392,9 +398,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -490,9 +498,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFailed == true then
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				else
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				end
 		end
 		
@@ -588,9 +598,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -683,9 +695,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -776,9 +790,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -870,9 +886,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -965,9 +983,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		
@@ -1100,9 +1120,11 @@ SMODS.Joker {
 				if card.ability.extra.prescriptFullfilled == true then
 					card.prescriptFullfilled = true
 					PMCMOD.grant_grace()
+					PMCMOD.prescript_verdict(card, true)
 				else
 					card.prescriptFullfilled = false
 					PMCMOD.grant_karma()
+					PMCMOD.prescript_verdict(card, false)
 				end
 		end
 		

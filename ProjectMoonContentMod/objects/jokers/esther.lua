@@ -2,7 +2,7 @@ SMODS.Joker {
 	key = 'esther',
 	name = "Esther",
 	pronouns = "he_him",
-	config = { extra = { karmaXchips = 0.1, handGranted = false } },
+	config = { extra = { graceXchips = 0.1, handGranted = false } },
 	unlocked = false,
 	eternal_compat = true,
 	perishable_compat = true,	
@@ -18,7 +18,7 @@ SMODS.Joker {
  	},
 	loc_vars = function (self, info_queue, card)
 		info_queue[#info_queue+1] = {set = "Other", key = "effect_singleton"}
-    	return {vars = { 1 + card.ability.extra.karmaXchips * (PMCMOD.karma() - PMCMOD.grace()), PMCMOD.grace(), PMCMOD.karma(), PMCMOD.sora_grace() }}
+    	return {vars = { 1 + card.ability.extra.graceXchips * PMCMOD.sora_grace(), PMCMOD.grace(), PMCMOD.karma(), PMCMOD.sora_grace() }}
 	end,
 	calculate = function(self, card, context)
 		
@@ -45,8 +45,8 @@ SMODS.Joker {
 			end
 
 			if singletonCounter == 1 then
-				-- Karma raises it, Grace lowers it
-				local xm = 1 + card.ability.extra.karmaXchips * (PMCMOD.karma() - PMCMOD.grace())
+				-- Grace raises it, Karma pulls it down
+				local xm = 1 + card.ability.extra.graceXchips * PMCMOD.sora_grace()
 				if xm > 0 then
 					return { xchips = xm }
 				end

@@ -118,6 +118,13 @@ function PMCMOD.pair_linked(card)
     return false
 end
 
+-- For tooltips only: the shared count plus whether the pair is actually linked right now, so the
+-- player can see why it is or is not rising.
+function PMCMOD.pair_trigger_display(card)
+    local marker = PMCMOD.pair_linked(card) and localize('pmcmod_pairLinked') or localize('pmcmod_pairUnlinked')
+    return PMCMOD.pair_triggers(card) .. " (" .. marker .. ")"
+end
+
 function PMCMOD.pair_triggers(card)
     local father = PMCMOD.pair_father_of(card and card.config and card.config.center and card.config.center.key)
     if not father or not G.GAME then return 0 end

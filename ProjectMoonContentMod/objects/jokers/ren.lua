@@ -18,7 +18,7 @@ SMODS.Joker {
  	},
 	loc_vars = function(self, info_queue, card)
         local new_numerator, new_denominator = SMODS.get_probability_vars(card, card.ability.extra.baseChance, card.ability.extra.maxChance, 'ren')
-        return {vars = { PMCMOD.pair_triggers(card), new_numerator, new_denominator } } 
+        return {vars = { PMCMOD.pair_trigger_display(card), new_numerator, new_denominator } } 
 	end,
 	calculate = function(self, card, context)
 		if context.before then

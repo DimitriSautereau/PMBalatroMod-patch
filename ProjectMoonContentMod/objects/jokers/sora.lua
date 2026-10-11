@@ -29,7 +29,7 @@ SMODS.Joker {
 
 
 
-        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, PMCMOD.pair_triggers(card),
+        return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, PMCMOD.pair_trigger_display(card),
             PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.mult, card.ability.extra.xmult, card.ability.extra.chargeStacks, PMCMOD.sora_grace() } }
 	end,
 	-- taken once and never offered again

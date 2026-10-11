@@ -18,7 +18,7 @@ SMODS.Joker {
 		["Index"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-        return {vars = { card.ability.extra.mult, PMCMOD.pair_triggers(card), card.ability.extra.mult_mod,
+        return {vars = { card.ability.extra.mult, PMCMOD.pair_trigger_display(card), card.ability.extra.mult_mod,
 			PMCMOD.grace(), PMCMOD.karma(), card.ability.extra.graceXchips, card.ability.extra.karmaXmult, card.ability.extra.karmaChips } }
 	end,
 	-- Rien carries the Karmic Consequence; destroying or selling him clears it.

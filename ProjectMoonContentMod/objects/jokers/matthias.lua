@@ -23,7 +23,7 @@ SMODS.Joker {
 					if SMODS.has_enhancement(playing_card, 'm_pmcmod_burn') then burn_tally = burn_tally + 1 end
 				end
 			end
-        return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, PMCMOD.pair_triggers(card) } }
+        return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, PMCMOD.pair_trigger_display(card) } }
 	end,
 	calculate = function(self, card, context)
 		if context.before then

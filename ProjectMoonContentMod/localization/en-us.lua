@@ -3264,7 +3264,9 @@ return {
             pmcmod_prescriptInProgress="In Progress",
             pmcmod_prescriptFulfilled="Fulfilled",
             pmcmod_nikolaiCataloguedTrue="Catalogued",
-            pmcmod_nikolaiCataloguedFalse="Not catalogued"
+            pmcmod_nikolaiCataloguedFalse="Not catalogued",
+            pmcmod_pairLinked="linked",
+            pmcmod_pairUnlinked="not linked"
         },
         high_scores={},
         labels={

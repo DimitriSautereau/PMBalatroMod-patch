@@ -2,48 +2,17 @@ SMODS.Enhancement {
     key = "burn",
     atlas = "ModdedProjectMoonEditions",
     pos = { x = 0, y = 2},
-    config = { bonus = 0, triggersLeft = 4},
+    config = { },
     loc_vars = function(self, info_queue, card)
-        local currentBlindCount = 0
-        if G.GAME.blind and G.GAME.blind.in_blind then
-            currentBlindCount = G.GAME.blind.chips
-        end
-        return { vars = {(currentBlindCount or 0) * 0.001 * PMCMOD.laevateinn_scale(), card.ability.triggersLeft}}
-    end,
-    update = function(self, card, dt)
-        if G.GAME.blind and G.GAME.blind.in_blind then
-            -- the Laevateinn's remaining counters strengthen the seal
-            card.ability.bonus = G.GAME.blind.chips * 0.001 * PMCMOD.laevateinn_scale()
-            if to_big(card.ability.bonus) >= to_big(9999) then
-                card.ability.bonus = 9999
-            end
-        end
+        return { vars = { PMCMOD.burn_chips() } }
     end,
     calculate = function(self, card, context)
-        if context.after then
-            card.ability.triggersLeft = card.ability.triggersLeft - 1
-
-            if card.ability.triggersLeft <= 0 then
-                card:set_ability("c_base")
-            end
+        -- Paid as chips rather than folded into the card's own chip value through ability.bonus, and
+        -- with no use limit: a Burn Card never burns out. main_scoring is the context the other
+        -- enhancements in this mod pay out on (bleed, poise, rupture, sinking); context.after was too
+        -- late for a returned effect to reach the score, which is why this used ability.bonus.
+        if context.main_scoring and context.cardarea == G.play then
+            return { chips = PMCMOD.burn_chips() }
         end
-    end,
-    set_sprites = function(self, card, front)
-    G.E_MANAGER:add_event(Event({
-      blockable = false,
-      func = function()
-        card.canvas_text = SMODS.CanvasSprite {
-          canvasW = 71, canvasH = 95,
-          text_offset = { x = 9, y = 86 },
-          text_colour = HEX('260a03'),
-          text_width = 15,
-          text_height = 10,
-          ref_table = card.ability,
-          ref_value = "triggersLeft",
-          text = "?"
-        }
-        return true
-      end
-    }))
     end,
 }

@@ -309,6 +309,15 @@ function PMCMOD.prescript_driver()
     PMCMOD.claim_slot(spawned)
 end
 
+-- What a Burn Card pays: 0.001% of the Encounter, grown by the Laevateinn's remaining counters
+-- and bounded at 9999 the way it always was.
+function PMCMOD.burn_chips()
+    local encounter = (G.GAME and G.GAME.blind and G.GAME.blind.chips) or 0
+    local value = encounter * 0.001 * PMCMOD.laevateinn_scale()
+    if to_big(value) >= to_big(9999) then value = 9999 end
+    return value
+end
+
 -- Credit Card is the one thing that lets the purse go negative, in vanilla and here.
 function PMCMOD.credit_card_in_play()
     return #SMODS.find_card('j_credit_card') > 0

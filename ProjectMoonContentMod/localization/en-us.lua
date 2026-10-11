@@ -166,9 +166,8 @@ return {
             m_pmcmod_burn = {
                 name = "Burn Card",
                 text = {
-                    "Gives {C:chips}0.001%{} of the total Encounter",
-                    "score as extra chips",
-                    "Remaining count: #2#",
+                    "Gives {C:chips}#1#{} Chips, {C:inactive}0.001% of the Encounter{}",
+                    "{C:inactive}Never burns out{}",
                     "When scored without a seal, it can gain",
                     "the {C:attention}Wrath Seal{} ({C:green}1 in 10{})"
                 },
@@ -2811,7 +2810,9 @@ return {
                     "{C:chips}+0-8 Perma Chips{}, {C:mult}+0-4 Perma Mult{}",
                     "or {C:gold}+1 Perma Money{}",
                     "{C:inactive}(+2 Chips and +1 Mult per Sloth seal){}",
-                    "1 in 10 on scored {C:attention}Burn{} cards"
+                    "1 in 10 on scored {C:attention}Burn{} cards",
+                    "{C:inactive}Scored: 1.2 per Sloth seal in 10 to become{}",
+                    "{C:inactive}Burn, and in 20 to spread the seal{}"
                 },
             },
             pmcmod_sinpride_seal = {
@@ -3277,7 +3278,10 @@ return {
             pmcmod_pairLinked="linked",
             pmcmod_pairUnlinked="not linked",
             pmcmod_chargeSpend="Charge Retrigger",
-            pmcmod_sinclairAgain="Triggered"
+            pmcmod_sinclairAgain="Triggered",
+pmcmod_laevateinnSpent="Laevateinn Spent",
+pmcmod_sinWrath_burn="Wrath: Burn",
+pmcmod_sinWrath_spread="Wrath: Spread"
         },
         high_scores={},
         labels={

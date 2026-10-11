@@ -27,6 +27,11 @@ SMODS.Joker {
 			card.children.center:set_sprite_pos({x = 1 , y = 11})
 		end
 
+		-- she carries the Charge edition's rules once she has absorbed one
+		if card.ability.extra.chargeStacks > 0 then
+			info_queue[#info_queue + 1] = G.P_CENTERS.e_pmcmod_charge
+		end
+
 
 
         return {vars = { card.ability.extra.chips, card.ability.extra.chips_mod, PMCMOD.pair_trigger_display(card),
@@ -148,22 +153,23 @@ SMODS.Joker {
 
 			local ex = card.ability.extra
 			local ret = {}
-			-- her keypage triggers once more per Charge stack spent on it
-			local applications = 1 + (ex.chargeTriggers or 0) + doubleTrigger
+			-- Her keypage triggers once, plus once per Charge stack spent on it, plus the
+			-- adjacency double. Each trigger applies the whole effect again.
+			local triggers = 1 + (ex.chargeTriggers or 0) + doubleTrigger
 
 			if ex.locked then
 				-- second form: the net Grace (Grace less Karma, which can go negative) is added to
 				-- each channel on top of what she absorbed
 				local sg = PMCMOD.sora_grace()
 				local factor = 1 + 0.1 * sg
-				ret.chips = ex.chips * factor * applications
-				ret.mult = ex.mult * factor * applications
+				ret.chips = ex.chips * factor * triggers
+				ret.mult = ex.mult * factor * triggers
 				local xm = ex.xmult * factor
-				if xm > 0 then ret.xmult = xm ^ applications end
+				if xm > 0 then ret.xmult = xm ^ triggers end
 			else
-				ret.chips = ex.chips * applications
-				if ex.mult > 0 then ret.mult = ex.mult * applications end
-				if ex.xmult ~= 1 then ret.xmult = ex.xmult ^ applications end
+				ret.chips = ex.chips * triggers
+				if ex.mult > 0 then ret.mult = ex.mult * triggers end
+				if ex.xmult ~= 1 then ret.xmult = ex.xmult ^ triggers end
 			end
 
 			return ret

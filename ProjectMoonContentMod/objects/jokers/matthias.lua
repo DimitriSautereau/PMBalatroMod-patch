@@ -2,7 +2,8 @@ SMODS.Joker {
 	key = 'matthias',
 	name = "Matthias",
 	pronouns = "he_him",
-	config = { extra = { hands = 1, dollarsBase = 2, kiraDeathCounter = 0, kiraPresent = false, kiraPos = nil } },
+	config = { extra = { hands = 1, laevateinn = 3, price = 2, brokeOnce = false, keypageOnce = false,
+		kiraPresent = false, currentPosition = 1 } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -17,64 +18,103 @@ SMODS.Joker {
 		["Middle"] = true,
  	},
 	loc_vars = function(self, info_queue, card)
-		local burn_tally = 0
-			if G.playing_cards then
-				for _, playing_card in ipairs(G.playing_cards) do
-					if SMODS.has_enhancement(playing_card, 'm_pmcmod_burn') then burn_tally = burn_tally + 1 end
-				end
-			end
-        return {vars = { card.ability.extra.hands, card.ability.extra.dollarsBase, card.ability.extra.dollarsBase * burn_tally, PMCMOD.pair_trigger_display(card) } }
+		info_queue[#info_queue+1] = G.P_CENTERS.m_pmcmod_burn
+        return {vars = { card.ability.extra.hands, card.ability.extra.laevateinn, card.ability.extra.price,
+			PMCMOD.laevateinn_scale() } }
 	end,
 	calculate = function(self, card, context)
+		local ex = card.ability.extra
+
 		-- the pairing is locked in at the start of the Scene and held for it
 		if context.setting_blind and not context.blueprint then
-			card.ability.extra.kiraPresent = PMCMOD.pair_linked(card)
+			ex.kiraPresent = PMCMOD.pair_linked(card)
 		end
-		if context.before then
-			card.ability.extra.kiraPresent = false
+		if context.before and not context.blueprint then
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
-					card.ability.extra.currentPosition = i
+					ex.currentPosition = i
 					break
 				end
 			end
-
-			-- only the partner exactly on the correct side counts
-			
 		end
 
-		if context.individual and context.cardarea == G.play and #context.scoring_hand <= 3 and G.GAME.current_round.hands_played == 0 then
-			
-			
-			local burn_tally = 0
-			if G.playing_cards then
-				for _, playing_card in ipairs(G.playing_cards) do
-					if SMODS.has_enhancement(playing_card, 'm_pmcmod_burn') then burn_tally = burn_tally + 1 end
-				end
-			end
-
-			
-
-			if card.ability.extra.dollarsBase * burn_tally <= G.GAME.dollars then
-				context.other_card:set_ability("m_pmcmod_burn", nil, true)
-				if card.ability.extra.kiraPresent then
-					if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
+		-- With the Laevateinn spent the seal spreads on its own: every scored card rolls once,
+		-- gaining Burn on a hit, and a hit on a card that already burns consumes it.
+		if context.individual and context.cardarea == G.play and not context.blueprint
+			and ex.laevateinn <= 0 then
+			if SMODS.pseudorandom_probability(card, 'matthias_seal', 1, 5, 'matthias_seal') then
+				if SMODS.has_enhancement(context.other_card, 'm_pmcmod_burn') then
+					SMODS.destroy_cards(context.other_card)
 				else
-					ease_dollars (-card.ability.extra.dollarsBase * burn_tally)
-				end
-
-				if PMCMOD.pair_triggers(card) >= 5 then
-					G.GAME.banned_keys["j_pmcmod_kira"] = true
-					local kira = G.jokers.cards[card.ability.extra.kiraPos]
-                    kira.getting_sliced = true
-                    G.E_MANAGER:add_event(Event({func = function()
-                        card:juice_up(0.8, 0.8)
-                        kira:start_dissolve({G.C.RED}, nil, 1.6)
-                    return true end }))
+					context.other_card:set_ability('m_pmcmod_burn', nil, true)
 				end
 			end
 		end
 
+		if context.individual and context.cardarea == G.play and not context.blueprint
+			and ex.laevateinn > 0 and G.GAME.current_round and G.GAME.current_round.hands_played == 0
+			and not SMODS.has_enhancement(context.other_card, 'm_pmcmod_burn') then
+			local scored = context.scoring_hand or {}
+
+			if #scored < 4 then
+				-- a short first hand: buy Burn for this card at the going price
+				if ex.price <= G.GAME.dollars then
+					context.other_card:set_ability('m_pmcmod_burn', nil, true)
+					ease_dollars(-ex.price)
+					ex.price = ex.price + 1
+				elseif not ex.brokeOnce then
+					-- Broke. At the last counter the seal takes Kira and bans her from the pool;
+					-- otherwise it takes the unburnt card itself.
+					ex.brokeOnce = true
+					ex.laevateinn = ex.laevateinn - 1
+					local kira = nil
+					local jokers = G.jokers.cards or {}
+					for i = 1, #jokers do
+						if PMCMOD.bare_key(jokers[i].config.center.key) == 'kira' then kira = jokers[i] end
+					end
+					if ex.laevateinn <= 0 and kira then
+						G.GAME.banned_keys['j_pmcmod_kira'] = true
+						kira.getting_sliced = true
+						G.E_MANAGER:add_event(Event({func = function()
+							card:juice_up(0.8, 0.8)
+							kira:start_dissolve({G.C.RED}, nil, 1.6)
+							return true end }))
+					else
+						SMODS.destroy_cards(context.other_card)
+						ease_dollars(20)
+					end
+					card_eval_status_text(card, 'extra', nil, nil, nil, {
+						message = localize('pmcmod_laevateinnSpent'), colour = G.C.RED,
+					})
+				end
+			elseif not ex.keypageOnce then
+				-- a long first hand: the Laevateinn takes a Keypage instead, once per run
+				ex.keypageOnce = true
+				local pool = {}
+				local jokers = G.jokers.cards or {}
+				for i = 1, #jokers do
+					local other = jokers[i]
+					local otherKey = PMCMOD.bare_key(other.config.center.key)
+					if other ~= card and otherKey ~= 'kira'
+						and not SMODS.is_eternal(other, { destroy_cards = true }) then
+						pool[#pool + 1] = other
+					end
+				end
+				if #pool > 0 then
+					local target = pseudorandom_element(pool, pseudoseed('pmcmod_laevateinn'))
+					ex.laevateinn = ex.laevateinn - 1
+					ease_dollars(20)
+					target.getting_sliced = true
+					G.E_MANAGER:add_event(Event({func = function()
+						card:juice_up(0.8, 0.8)
+						target:start_dissolve({G.C.RED}, nil, 1.6)
+						return true end }))
+					card_eval_status_text(card, 'extra', nil, nil, nil, {
+						message = localize('pmcmod_laevateinnSpent'), colour = G.C.RED,
+					})
+				end
+			end
+		end
     end,
 	add_to_deck = function(self, card, from_debuff)
         G.GAME.round_resets.hands = G.GAME.round_resets.hands - card.ability.extra.hands

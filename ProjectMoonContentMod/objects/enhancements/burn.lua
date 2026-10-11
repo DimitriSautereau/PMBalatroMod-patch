@@ -8,11 +8,12 @@ SMODS.Enhancement {
         if G.GAME.blind and G.GAME.blind.in_blind then
             currentBlindCount = G.GAME.blind.chips
         end
-        return { vars = {(currentBlindCount or 0) * 0.001, card.ability.triggersLeft}}
+        return { vars = {(currentBlindCount or 0) * 0.001 * PMCMOD.laevateinn_scale(), card.ability.triggersLeft}}
     end,
     update = function(self, card, dt)
         if G.GAME.blind and G.GAME.blind.in_blind then
-            card.ability.bonus = G.GAME.blind.chips * 0.001
+            -- the Laevateinn's remaining counters strengthen the seal
+            card.ability.bonus = G.GAME.blind.chips * 0.001 * PMCMOD.laevateinn_scale()
             if to_big(card.ability.bonus) >= to_big(9999) then
                 card.ability.bonus = 9999
             end

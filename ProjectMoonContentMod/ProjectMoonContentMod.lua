@@ -309,6 +309,16 @@ function PMCMOD.prescript_driver()
     PMCMOD.claim_slot(spawned)
 end
 
+-- How much stronger Burn Cards are for what is left of the Laevateinn: x10 per counter below
+-- three, so x1 at a full three and x1000 at none. No Matthias means no change at all.
+function PMCMOD.laevateinn_scale()
+    local found = SMODS.find_card('j_pmcmod_matthias')
+    if not found or #found == 0 then return 1 end
+    local extra = found[1].ability and found[1].ability.extra
+    if type(extra) ~= 'table' or type(extra.laevateinn) ~= 'number' then return 1 end
+    return 10 ^ math.max(0, 3 - extra.laevateinn)
+end
+
 -- ---------------------------------------------------------------------------
 -- Index Keypages lost to a prescript
 -- ---------------------------------------------------------------------------

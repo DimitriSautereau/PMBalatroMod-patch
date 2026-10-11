@@ -128,6 +128,16 @@ SMODS.Joker {
 
 		end
 
+		-- The adjacency double is registered before the engine asks about retriggers, and it lasts
+		-- for the rest of the Reception. The shared counter rises once per Reception.
+		if context.before and not context.blueprint then
+			local reception = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
+			if card.ability.extra.rienPresent and card.ability.extra.doubleReception ~= reception then
+				card.ability.extra.doubleReception = reception
+				PMCMOD.add_pair_trigger(card, 1)
+			end
+		end
+
 		-- Charge stacks: Sora feeds the pool from them, and spends the usual 5 to buy extra triggers
 		-- with each stack. Give and triggers both scale with the stacks, the spend never does.
 		if card.ability.extra.chargeStacks > 0 then
@@ -143,33 +153,36 @@ SMODS.Joker {
 			-- 5 Charge buys her own keypage another trigger, once per hand. This used to sit in
 			-- context.repetition - the card-retrigger context - which is why she retriggered played
 			-- cards. Per stack her keypage triggers once more, for the same single spend.
-			if context.joker_main and not context.blueprint then
-				-- starts fresh every hand: only a spend made in this hand counts
-				card.ability.extra.chargeTriggers = 0
+			-- The spend happens at context.before: the engine asks about retriggers before
+			-- joker_main runs, so spending any later would miss this hand's repetitions.
+			if context.before and not context.blueprint then
+				card.ability.extra.chargeTriggers = 0   -- only a spend made in this hand counts
+				if PMCMOD.get_charge() >= 5 and card.ability.extra.chargeSpendHand ~= handKey then
+					card.ability.extra.chargeSpendHand = handKey
+					PMCMOD.add_charge(-5)
+					card.ability.extra.chargeTriggers = card.ability.extra.chargeStacks
+					card_eval_status_text(card, 'extra', nil, nil, nil, {
+						message = localize('pmcmod_chargeSpend'),
+						colour = G.C.BLUE,
+					})
+				end
 			end
+		end
 
-			if context.joker_main and not context.blueprint and PMCMOD.get_charge() >= 5
-				and card.ability.extra.chargeSpendHand ~= handKey then
-				card.ability.extra.chargeSpendHand = handKey
-				PMCMOD.add_charge(-5)
-				card.ability.extra.chargeTriggers = card.ability.extra.chargeStacks
-				card_eval_status_text(card, 'extra', nil, nil, nil, {
-					message = localize('pmcmod_chargeSpend'),
-					colour = G.C.BLUE,
-				})
+		-- Physical retriggers, the way leiHeng does it: answer the engine's retrigger check for
+		-- ourselves and let it run this keypage again that many times, each with its own popup.
+		if context.retrigger_joker_check and context.other_card == card and not context.blueprint then
+			local receptionNow = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
+			local extra = (card.ability.extra.chargeTriggers or 0)
+				+ ((card.ability.extra.doubleReception == receptionNow) and 1 or 0)
+			if extra > 0 then
+				return { repetitions = extra }
 			end
 		end
 
 		if context.joker_main then
 
-			local reception = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
 
-			-- The counter rises once per Reception, but she triggers twice for the rest of it.
-			if card.ability.extra.rienPresent and card.ability.extra.doubleReception ~= reception then
-				card.ability.extra.doubleReception = reception
-				if not context.blueprint then PMCMOD.add_pair_trigger(card, 1) end
-			end
-			local doubleTrigger = card.ability.extra.doubleReception == reception and 1 or 0
 
 			if PMCMOD.pair_triggers(card) >= 5 then
 				card.getting_sliced = true
@@ -180,24 +193,23 @@ SMODS.Joker {
 
 			local ex = card.ability.extra
 			local ret = {}
-			-- Her keypage triggers once, plus once per Charge stack spent on it, plus the
-			-- adjacency double. Each trigger applies the whole effect again.
-			local triggers = 1 + (ex.chargeTriggers or 0) + doubleTrigger
+			-- applied once; the extra triggers are real repetitions granted through the retrigger
+			-- check above, so they show up as their own applications
 
 			if ex.locked then
 				-- second form: the net Grace (Grace less Karma, which can go negative) is added to
 				-- each channel on top of what she absorbed
 				local sg = PMCMOD.sora_grace()
 				local factor = 1 + 0.1 * sg
-				ret.chips = ex.chips * factor * triggers
-				ret.mult = ex.mult * factor * triggers
+				ret.chips = ex.chips * multiplier * factor
+				ret.mult = ex.mult * factor
 				-- XMult is a power of the absorbed value rather than a factor of it
 				local xm = ex.xmult ^ (1 + 0.5 * sg)
-				if xm > 0 then ret.xmult = xm ^ triggers end
+				if xm > 0 then ret.xmult = xm end
 			else
-				ret.chips = ex.chips * triggers
-				if ex.mult > 0 then ret.mult = ex.mult * triggers end
-				if ex.xmult ~= 1 then ret.xmult = ex.xmult ^ triggers end
+				ret.chips = ex.chips * multiplier
+				if ex.mult > 0 then ret.mult = ex.mult end
+				if ex.xmult ~= 1 then ret.xmult = ex.xmult end
 			end
 
 			return ret

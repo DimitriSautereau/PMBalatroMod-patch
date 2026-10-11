@@ -41,9 +41,17 @@ SMODS.Joker {
 		local here = (G.GAME.round_resets.ante or 0) * 10000 + (G.GAME.round or 0)
 		local triggersNow = 1 + (((ex.doubleReception == here) and 1) or 0) + (ex.chargeTriggers or 0)
 
-        return {vars = { ex.chips, ex.chips_mod, PMCMOD.pair_trigger_display(card),
-            PMCMOD.grace(), PMCMOD.karma(), ex.mult, ex.xmult, ex.chargeStacks, PMCMOD.sora_grace(),
-            ex.chips * factor, ex.mult * factor, ex.xmult * factor, triggersNow } }
+        return {vars = {
+            ex.chips * factor,                    -- #1# Chips, after the net-Grace factor
+            triggersNow,                          -- #2# triggers this hand
+            PMCMOD.pair_trigger_display(card),     -- #3#
+            PMCMOD.grace(),                       -- #4#
+            PMCMOD.karma(),                       -- #5#
+            ex.mult * factor,                     -- #6# Mult, after the factor
+            ex.xmult * factor,                    -- #7# XMult, after the factor
+            ex.chargeStacks,                      -- #8#
+            PMCMOD.sora_grace(),                  -- #9#
+        } }
 	end,
 	-- taken once and never offered again
 	add_to_deck = function(self, card, from_debuff)

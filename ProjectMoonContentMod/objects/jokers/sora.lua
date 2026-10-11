@@ -73,8 +73,17 @@ SMODS.Joker {
 			-- any Keypage holding an edition is fair game, however many Sora has taken already
 			local wearingNegative = card.edition and card.edition.key == 'e_negative'
 			local editionJokers = {}
+			local priority = nil
 			for i = 1, #G.jokers.cards do
 				local other = G.jokers.cards[i]
+				-- Rien directly to her right: his Edition goes first
+				if other == card then
+					local right = G.jokers.cards[i + 1]
+					if right and right.config.center.key == "j_pmcmod_rien" and right.edition
+						and not (wearingNegative and right.edition.key == 'e_negative') then
+						priority = right
+					end
+				end
 				-- she wears one Negative and never takes a second
 				if other ~= card and other.edition
 					and not (wearingNegative and other.edition.key == 'e_negative') then
@@ -82,8 +91,8 @@ SMODS.Joker {
 				end
 			end
 
-			if #editionJokers > 0 then
-				local eligible_card = pseudorandom_element(editionJokers, 'sora')
+			if priority or #editionJokers > 0 then
+				local eligible_card = priority or pseudorandom_element(editionJokers, 'sora')
 				local stolen = eligible_card.edition.key
 				eligible_card:set_edition()          -- it always leaves its owner
 

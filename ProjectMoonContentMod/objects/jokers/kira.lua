@@ -2,7 +2,8 @@ SMODS.Joker {
 	key = 'kira',
 	name = "Kira",
 	pronouns = "she_her",
-	config = { extra = { currentPosition = 1, kiraDeathCounter = 0, dollars = 4, matthiasPresent = false, matthiasPos = nil } },
+	config = { extra = { currentPosition = 1, kiraDeathCounter = 0, dollars = 4, matthiasPresent = false,
+		triggerHand = -1, banned = false, matthiasPos = nil } },
 	unlocked = true,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -37,8 +38,15 @@ SMODS.Joker {
 		end
 
 		if context.individual and context.cardarea == G.play and SMODS.has_enhancement(context.other_card, 'm_pmcmod_burn') then
-			-- the adjacency still counts for her trigger total, even though the payout is flat
-			if card.ability.extra.matthiasPresent and not context.blueprint then
+			-- The adjacency still counts for her trigger total even though the payout is flat, and
+			-- it counts once per HAND: this sits in context.individual, so without the guard a hand
+			-- scoring three Burn Cards would count three times.
+			local rr = G.GAME.round_resets or {}
+			local handKey = (rr.ante or 0) * 10000 + (G.GAME.round or 0) * 100
+				+ (((G.GAME.current_round or {}).hands_played) or 0)
+			if card.ability.extra.matthiasPresent and card.ability.extra.triggerHand ~= handKey
+				and not context.blueprint then
+				card.ability.extra.triggerHand = handKey
 				PMCMOD.add_pair_trigger(card, 1)
 			end
 			return {
@@ -46,13 +54,14 @@ SMODS.Joker {
 			}
         end
 
-		if context.after then
-			if PMCMOD.pair_triggers(card) >= 3 then
-                    card.getting_sliced = true
-                    G.E_MANAGER:add_event(Event({func = function()
-                        card:start_dissolve({G.C.RED}, nil, 1.6)
-                    return true end }))
-			end
+		if context.after and not card.ability.extra.banned and PMCMOD.pair_triggers(card) >= 3 then
+			card.ability.extra.banned = true
+			-- Dying this way takes her out of the pool as well, the same as Matthias's Laevateinn.
+			G.GAME.banned_keys['j_pmcmod_kira'] = true
+			card.getting_sliced = true
+			G.E_MANAGER:add_event(Event({func = function()
+				card:start_dissolve({G.C.RED}, nil, 1.6)
+				return true end }))
 		end
     end,
 	set_badges = function(self, card, badges)

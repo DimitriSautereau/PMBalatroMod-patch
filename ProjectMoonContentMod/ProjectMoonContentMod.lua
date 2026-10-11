@@ -309,6 +309,11 @@ function PMCMOD.prescript_driver()
     PMCMOD.claim_slot(spawned)
 end
 
+-- Credit Card is the one thing that lets the purse go negative, in vanilla and here.
+function PMCMOD.credit_card_in_play()
+    return #SMODS.find_card('j_credit_card') > 0
+end
+
 -- How much stronger Burn Cards are for what is left of the Laevateinn: x10 per counter below
 -- three, so x1 at a full three and x1000 at none. No Matthias means no change at all.
 function PMCMOD.laevateinn_scale()

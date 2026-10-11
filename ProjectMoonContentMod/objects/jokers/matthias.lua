@@ -60,11 +60,21 @@ SMODS.Joker {
 			local handKey = (rr.ante or 0) * 10000 + (G.GAME.round or 0) * 100
 				+ (((G.GAME.current_round or {}).hands_played) or 0)
 
+			local linked = PMCMOD.pair_linked(card)
+
 			if #scored < 4 then
-				-- a short first hand: Burn is given free, but the price still climbs, and once it
-				-- outruns the purse the seal starts destroying instead
-				if ex.price <= G.GAME.dollars then
+				-- A short first hand: Burn is bought at the going price, which climbs by $1 each
+				-- time. Kira to his right waives it entirely. Money never goes below $0 unless a
+				-- Credit Card is held, and only then can the price be paid while short.
+				if linked then
 					context.other_card:set_ability('m_pmcmod_burn', nil, true)
+				elseif ex.price <= G.GAME.dollars then
+					context.other_card:set_ability('m_pmcmod_burn', nil, true)
+					ease_dollars(-ex.price)
+					ex.price = ex.price + 1
+				elseif PMCMOD.credit_card_in_play() then
+					context.other_card:set_ability('m_pmcmod_burn', nil, true)
+					ease_dollars(-ex.price)
 					ex.price = ex.price + 1
 				elseif ex.brokeHand ~= handKey then
 					-- Broke. At the last counter the seal takes Kira and bans her from the pool;

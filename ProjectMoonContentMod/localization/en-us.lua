@@ -2004,8 +2004,10 @@ return {
                 text = {
                     {"{C:blue}-#1#{} Hand.  {C:attention}Laevateinn: #2#{} counters left",
                     "{C:inactive}(Burn Cards are {C:attention}x#4#{} stronger now){}"},
-                    {"First hand scoring {C:attention}under 4{} cards: each unburnt card",
-                    "gains {C:red}Burn{} free; the price climbs {C:gold}$1{} a time from {C:gold}$#3#{}"},
+                    {"First hand scoring {C:attention}under 4{} cards: unburnt cards gain",
+                    "{C:red}Burn{} for {C:gold}$#3#{}, the price rising {C:gold}$1{} each time but never",
+                    "{C:gold}below $0{} unless you hold {C:attention}Credit Card{}. {C:attention}Kira{} to",
+                    "{C:attention}his right{} waives the price and stops it climbing"},
                     {"{C:inactive}Once the price outruns your purse:{} destroy the unburnt card for",
                     "{C:gold}$20{}, or a random {C:attention}non-Eternal{} Keypage if 4+ cards scored",
                     "{C:inactive}(once per hand, and it takes a counter each time){}"},

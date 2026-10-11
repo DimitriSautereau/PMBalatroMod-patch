@@ -50,6 +50,10 @@ SMODS.Joker {
 			local right = G.jokers.cards[card.ability.extra.currentPosition + 1]
 
 			if right and right.calculate_joker and card.ability.extra.counter > 0 then
+				card_eval_status_text(card, 'extra', nil, nil, nil, {
+					message = localize { type = 'variable', key = 'pmcmod_sinclairAgain', vars = { card.ability.extra.counter } },
+					colour = G.C.BLUE,
+				})
 				for _ = 1, card.ability.extra.counter do
 					-- Hand the neighbour a copy: jokers write into the context they are given
 					-- (Blueprint sets context.blueprint / blueprint_card), and those writes must not

@@ -3267,7 +3267,8 @@ return {
             pmcmod_nikolaiCataloguedFalse="Not catalogued",
             pmcmod_pairLinked="linked",
             pmcmod_pairUnlinked="not linked",
-            pmcmod_chargeSpend="Charge Retrigger"
+            pmcmod_chargeSpend="Charge Retrigger",
+            pmcmod_sinclairAgain="Triggered x#1#"
         },
         high_scores={},
         labels={

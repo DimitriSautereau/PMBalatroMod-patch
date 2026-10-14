@@ -2842,13 +2842,8 @@ return {
             pmcmod_sinsloth_seal = {
                 name = "Sloth",
                 text = {
-                    "Passively enhances every other sin.",
-                    "Each Sloth seal in the deck adds:",
-                    "{C:chips}+2{} Chips and {C:mult}+1{} Mult (Wrath)",
-                    "{C:chips}+5{} Perma Chips (Gluttony, Gloom)",
-                    "{X:mult,C:white}+0.1X{} Mult (Pride)",
-                    "+1 in 4 chance (Envy), better spread (Lust)",
-                    "1 in 10 on scored {C:attention}Tremor{} cards"
+                    "Enchants every other {C:attention}sin seal{}",
+                    "{C:inactive}(more Sloth seals in the deck, stronger){}"
                 },
             },
             pmcmod_sinlust_seal = {

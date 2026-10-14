@@ -2003,18 +2003,19 @@ return {
                 text = {
                     {"{C:blue}-#1#{} Hand.  {C:diamonds}Laevateinn:{} {C:attention}#2#{} counters left",
                     "{C:inactive}(Each spent counter multiplies Burn by x10, currently {C:attention}x#4#{}){}",
-                    "At 0 {C:diamonds}Laevateinn{}, every scored card has a {C:attention}1 in 5{}",
-                    "chance to gain {C:red}Burn{}, destroy it if it already is.{}"},
-
-                    {"{C:attention}First hand of the scene:{}",
-                    "{C:attention}-4 cards:{} spend {C:money}$#3#{} to turn each scored cards into {C:red}Burn{} and rise by {C:gold}$1{}.",
+                    "At 0 {C:diamonds}Laevateinn{}, every scored card has a {C:attention}1 in 5{} chance",
+                    "to gain {C:red}Burn{}, destroy it if it already is{}"
+                    },
+                    
+                    {"{C:attention}First hand of the scene with {C:diamonds}Laevateinn{}:{}",
+                    "{C:attention}-4 cards:{} spend {C:money}$#3#{} to turn each scored cards into {C:red}Burn{} and rise by {C:money}$1{}.",
                     
                     "If the price is too high: use{C:diamonds} Laevateinn{}, destroy the card and gain {C:money}$20{}.", 
                     "{C:attention}4+ cards:{} use{C:diamonds} Laevateinn{} to destroy a random Keypage and gain {C:money}$20{}."},
                     
 
                     {"If {C:diamonds}Kira{} is to the right of this keypage, disable card burning cost.",
-                    "Using the last {C:diamonds}Laevateinn{} destroys and {C:red}bans{} {C:diamonds}Kira{}.",
+                    "Using the last {C:diamonds}Laevateinn{} destroys and bans {C:diamonds}Kira{} {C:inactive}from the pool{}.",
                     "{C:attention}#5#{} lets you pay in debt.",}
                 },              
                 unlock = {
@@ -2091,9 +2092,9 @@ return {
             j_pmcmod_kira = {
                 name = 'Kira',
                 text = {
-                    {"Burn Card gives {C:gold}$#2#{}"},
-                    {"Dies after {C:attention}3{} hands of Burn Cards, is banned",
-                    "{C:inactive}from the pool{} and spends a {C:attention}Laevateinn{} counter",
+                    {"{C:red}Burn{} Cards give {C:gold}$#2#{}"},
+                    {"Dies after Matthias burns {C:attention}3{} hands, is banned",
+                    "{C:inactive}from the pool{} and spends a {C:hearts}Laevateinn{} counter",
                     "{C:inactive}(Total triggers: {C:red}#1#{C:inactive}){}"},
                 },
                 unlock = {
